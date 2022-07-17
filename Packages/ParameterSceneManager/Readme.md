@@ -1,4 +1,4 @@
-﻿# add dependencies
+﻿# Add `manifest.json` Dependencies
 
 ```json
 {
