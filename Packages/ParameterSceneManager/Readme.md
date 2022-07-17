@@ -1,0 +1,9 @@
+﻿# add dependencies
+
+```json
+{
+  "dependencies": {
+    "com.cysharp.unitask": "https://github.com/Cysharp/UniTask.git?path=src/UniTask/Assets/Plugins/UniTask"
+  }
+}
+```

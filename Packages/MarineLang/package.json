@@ -1,0 +1,11 @@
+{
+  "name": "com.minemonsterlabo.marine_lang",
+  "author": "minemonsterlabo",
+  "version": "0.3.55",
+  "displayName": "MarineLang",
+  "type": "library",
+  "unity": "2021.1",
+  "dependencies": {
+    "com.unity.nuget.newtonsoft-json": "3.0.2"
+  }
+}
