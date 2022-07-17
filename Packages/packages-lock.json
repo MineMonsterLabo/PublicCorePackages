@@ -7,6 +7,12 @@
       "dependencies": {},
       "hash": "78db78c7bd5c1c75902dabb1496c85bd2316fca5"
     },
+    "com.minemonsterlabo.binary_tag": {
+      "version": "file:BinaryTag",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {}
+    },
     "com.minemonsterlabo.marine_lang": {
       "version": "file:MarineLang",
       "depth": 0,

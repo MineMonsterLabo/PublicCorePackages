@@ -1,0 +1,9 @@
+{
+  "name": "com.minemonsterlabo.binary_tag",
+  "author": "hiroki,minemonsterlabo",
+  "version": "3.2.0",
+  "displayName": "BinaryTag",
+  "type": "library",
+  "unity": "2021.1",
+  "dependencies": {}
+}
