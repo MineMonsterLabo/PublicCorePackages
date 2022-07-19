@@ -11,10 +11,10 @@
 
 #### MarineLang
 ```
-"com.minemonsterlabo.binary_tag": "https://github.com/MineMonsterLabo/PublicCoreUnityPackages.git?path=Packages/MarineLang"
+"com.minemonsterlabo.marine_lang": "https://github.com/MineMonsterLabo/PublicCoreUnityPackages.git?path=Packages/MarineLang"
 ```
 
 #### ParameterSceneManager
 ```
-"com.minemonsterlabo.binary_tag": "https://github.com/MineMonsterLabo/PublicCoreUnityPackages.git?path=Packages/ParameterSceneManager"
+"com.minemonsterlabo.parameter_senen_manager": "https://github.com/MineMonsterLabo/PublicCoreUnityPackages.git?path=Packages/ParameterSceneManager"
 ```
