@@ -1,3 +1,4 @@
+using System;
 using Cysharp.Threading.Tasks;
 using UniRx;
 using UnityEngine;
@@ -7,6 +8,8 @@ namespace ParameterSceneManager
 {
     public static class SceneManager
     {
+        private static IDisposable currentScene = null;
+
         [RuntimeInitializeOnLoadMethod]
         private static void Initialize()
         {
@@ -19,6 +22,7 @@ namespace ParameterSceneManager
                 {
                     scene.Initialize(Unit.Default);
                     Debug.Log($"Initialized {scene.GetType().Name} scene.");
+                    currentScene = scene;
                     break;
                 }
             }
@@ -39,10 +43,19 @@ namespace ParameterSceneManager
             foreach (var rootGameObject in rootGameObjects)
             {
                 var scene = rootGameObject.GetComponent<IScene<TArgument>>();
+
                 if (scene != null)
                 {
                     scene.Initialize(argument);
                     Debug.Log($"Initialized {scene.GetType().Name} scene.");
+
+                    if (currentScene != null)
+                    {
+                        currentScene.Dispose();
+                        Debug.Log($"disposed {currentScene.GetType().Name} scene.");
+                    }
+
+                    currentScene = scene;
                     break;
                 }
             }

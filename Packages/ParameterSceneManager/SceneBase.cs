@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace ParameterSceneManager
@@ -10,9 +11,13 @@ namespace ParameterSceneManager
         {
             Arg = argument;
         }
+
+        public virtual void Dispose()
+        {
+        }
     }
 
-    public interface IScene<in TArgument>
+    public interface IScene<in TArgument> : IDisposable
     {
         void Initialize(TArgument argument);
     }
