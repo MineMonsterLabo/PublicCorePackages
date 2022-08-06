@@ -13,6 +13,12 @@
       "source": "embedded",
       "dependencies": {}
     },
+    "com.minemonsterlabo.group_editor": {
+      "version": "file:GroupEditor",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {}
+    },
     "com.minemonsterlabo.marine_lang": {
       "version": "file:MarineLang",
       "depth": 0,

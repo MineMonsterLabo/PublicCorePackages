@@ -1,0 +1,9 @@
+﻿{
+  "name": "com.minemonsterlabo.group_editor",
+  "author": "minemonsterlabo",
+  "version": "1.0.0",
+  "displayName": "GroupEditor",
+  "type": "library",
+  "unity": "2021.1",
+  "dependencies": {}
+}

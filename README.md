@@ -9,6 +9,11 @@
 "com.minemonsterlabo.binary_tag": "https://github.com/MineMonsterLabo/PublicCoreUnityPackages.git?path=Packages/BinaryTag"
 ```
 
+#### GroupEditor
+```
+"com.minemonsterlabo.group_editor": "https://github.com/MineMonsterLabo/PublicCoreUnityPackages.git?path=Packages/GroupEditor"
+```
+
 #### MarineLang
 ```
 "com.minemonsterlabo.marine_lang": "https://github.com/MineMonsterLabo/PublicCoreUnityPackages.git?path=Packages/MarineLang"
