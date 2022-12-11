@@ -2,20 +2,20 @@
   "contents": [
     {
       "title": "UniTask",
-      "description": "https://github.com/Cysharp/UniTask.git?path=src/UniTask/Assets/Plugins/UniTask",
-      "content": "",
+      "description": "",
+      "content": "https://github.com/Cysharp/UniTask.git?path=src/UniTask/Assets/Plugins/UniTask",
       "type": 2
     },
     {
       "title": "UniRx",
-      "description": "https://github.com/neuecc/UniRx.git?path=Assets/Plugins/UniRx/Scripts",
-      "content": "",
+      "description": "",
+      "content": "https://github.com/neuecc/UniRx.git?path=Assets/Plugins/UniRx/Scripts",
       "type": 2
     },
     {
       "title": "ParameterSceneManager",
-      "description": "https://github.com/MineMonsterLabo/PublicCoreUnityPackages.git?path=Packages/ParameterSceneManager",
-      "content": "",
+      "description": "",
+      "content": "https://github.com/MineMonsterLabo/PublicCoreUnityPackages.git?path=Packages/ParameterSceneManager",
       "type": 2
     },
     {

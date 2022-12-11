@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
 using Newtonsoft.Json.Linq;
@@ -19,6 +20,9 @@ namespace UnitySetup.Editor
         private List<ContentInfo> _contents = new List<ContentInfo>();
         private Dictionary<int, bool> _installList = new Dictionary<int, bool>();
 
+        private int _installPackageCount = 0;
+        private List<string> _installedPackage = new List<string>();
+
         [MenuItem("Setup/Open Window")]
         public static void Open()
         {
@@ -34,6 +38,23 @@ namespace UnitySetup.Editor
         private void OnEnable()
         {
             InitializeContents();
+
+            AssetDatabase.importPackageCompleted += packageName =>
+            {
+                _installedPackage.Add(packageName);
+
+                if (_installedPackage.Count == _installPackageCount)
+                {
+                    EditorApplication.UnlockReloadAssemblies();
+                }
+            };
+            AssetDatabase.importPackageCancelled += packageName =>
+            {
+                _installPackageCount = 0;
+                _installedPackage.Clear();
+
+                EditorApplication.UnlockReloadAssemblies();
+            };
         }
 
         private void OnGUI()
@@ -128,12 +149,14 @@ namespace UnitySetup.Editor
 
             var orderBy = _installList.Select(e =>
             {
-                if (e.Value)
+                if (!e.Value)
                     return null;
 
                 var content = _contents[e.Key];
                 return content;
             }).Where(e => e != null).OrderBy(e => e.Type);
+            _installPackageCount = orderBy.GetHashCode();
+
             foreach (var contentInfo in orderBy)
             {
                 switch (contentInfo.Type)
@@ -149,8 +172,6 @@ namespace UnitySetup.Editor
                         break;
                 }
             }
-
-            EditorApplication.UnlockReloadAssemblies();
         }
 
         private void InstallZipContent(ContentInfo contentInfo)
@@ -166,11 +187,19 @@ namespace UnitySetup.Editor
 
             EditorUtility.ClearProgressBar();
 
-            AssetDatabase.ImportPackage($"{contentInfo.Title}.unitypackage", true);
+            AssetDatabase.ImportPackage($"{contentInfo.Title}.unitypackage", false);
+
+            File.Delete($"{contentInfo.Title}.unitypackage");
         }
 
         private void InstallPackageManagerContent(ContentInfo contentInfo)
         {
+            if (string.IsNullOrWhiteSpace(contentInfo.Content))
+            {
+                Debug.LogError($"Skip Install Content {contentInfo.Title}");
+                return;
+            }
+
             Client.Add(contentInfo.Content);
         }
     }
