@@ -54,7 +54,7 @@ namespace UnitySetup.Editor
         {
             _installedPackage.Add(packageName);
 
-            if (_installedPackage.Count == _installPackageCount)
+            if (_installedPackage.Count >= _installPackageCount)
             {
                 EditorApplication.UnlockReloadAssemblies();
             }
