@@ -23,3 +23,8 @@
 ```
 "com.minemonsterlabo.parameter_senen_manager": "https://github.com/MineMonsterLabo/PublicCoreUnityPackages.git?path=Packages/ParameterSceneManager"
 ```
+
+#### UnitySetup
+```
+"com.minemonsterlabo.unity_setup": "https://github.com/MineMonsterLabo/PublicCoreUnityPackages.git?path=Packages/UnitySetup"
+```
