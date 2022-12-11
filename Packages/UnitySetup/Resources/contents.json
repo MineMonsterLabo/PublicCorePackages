@@ -19,6 +19,27 @@
       "type": 0
     },
     {
+      "title": "BinaryTag",
+      "description": "",
+      "content": "https://github.com/MineMonsterLabo/PublicCoreUnityPackages.git?path=Packages/BinaryTag",
+      "type": 0,
+      "optional": true
+    },
+    {
+      "title": "GroupEditor",
+      "description": "",
+      "content": "https://github.com/MineMonsterLabo/PublicCoreUnityPackages.git?path=Packages/GroupEditor",
+      "type": 0,
+      "optional": true
+    },
+    {
+      "title": "MarineLang",
+      "description": "",
+      "content": "https://github.com/MineMonsterLabo/PublicCoreUnityPackages.git?path=Packages/MarineLang",
+      "type": 0,
+      "optional": true
+    },
+    {
       "title": "Zenject",
       "description": "",
       "content": "https://github.com/modesttree/Zenject/releases/download/9.2.0/Extenject.unitypackage",
