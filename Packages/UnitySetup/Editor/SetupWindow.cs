@@ -158,17 +158,18 @@ namespace UnitySetup.Editor
         {
             EditorApplication.LockReloadAssemblies();
 
-            var orderBy = _installList.Select(e =>
+            var installList = _installList.Select(e =>
             {
                 if (!e.Value)
                     return null;
 
                 var content = _contents[e.Key];
                 return content;
-            }).Where(e => e != null).GroupBy(e => e.Type, e => e);
-            _installPackageCount = orderBy.GetHashCode();
+            }).Where(e => e != null).ToArray();
+            var groupBy = installList.GroupBy(e => e.Type, e => e);
+            _installPackageCount = installList.Length;
 
-            foreach (var group in orderBy)
+            foreach (var group in groupBy)
             {
                 foreach (var contentInfo in group)
                 {
