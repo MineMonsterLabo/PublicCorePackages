@@ -22,6 +22,7 @@ namespace UnitySetup.Editor
 
         private int _installPackageCount = 0;
         private List<string> _installedPackage = new List<string>();
+        private List<string> _packageUrls = new List<string>();
 
         [MenuItem("Setup/Open Window")]
         public static void Open()
@@ -39,22 +40,32 @@ namespace UnitySetup.Editor
         {
             InitializeContents();
 
-            AssetDatabase.importPackageCompleted += packageName =>
-            {
-                _installedPackage.Add(packageName);
+            AssetDatabase.importPackageCompleted += AssetDatabaseOnimportPackageCompleted;
+            AssetDatabase.importPackageCancelled += AssetDatabaseOnimportPackageCancelled;
+        }
 
-                if (_installedPackage.Count == _installPackageCount)
-                {
-                    EditorApplication.UnlockReloadAssemblies();
-                }
-            };
-            AssetDatabase.importPackageCancelled += packageName =>
-            {
-                _installPackageCount = 0;
-                _installedPackage.Clear();
+        private void OnDisable()
+        {
+            AssetDatabase.importPackageCompleted -= AssetDatabaseOnimportPackageCompleted;
+            AssetDatabase.importPackageCancelled -= AssetDatabaseOnimportPackageCancelled;
+        }
 
+        private void AssetDatabaseOnimportPackageCompleted(string packageName)
+        {
+            _installedPackage.Add(packageName);
+
+            if (_installedPackage.Count == _installPackageCount)
+            {
                 EditorApplication.UnlockReloadAssemblies();
-            };
+            }
+        }
+
+        private void AssetDatabaseOnimportPackageCancelled(string packagename)
+        {
+            _installPackageCount = 0;
+            _installedPackage.Clear();
+
+            EditorApplication.UnlockReloadAssemblies();
         }
 
         private void OnGUI()
@@ -168,7 +179,13 @@ namespace UnitySetup.Editor
                         InstallUnityPackageContent(contentInfo);
                         break;
                     case ContentType.PackageManager:
-                        InstallPackageManagerContent(contentInfo);
+                        if (string.IsNullOrWhiteSpace(contentInfo.Content))
+                        {
+                            Debug.LogError($"Skip Install Content {contentInfo.Title}");
+                            return;
+                        }
+
+                        _packageUrls.Add(contentInfo.Content);
                         break;
                 }
             }
@@ -192,15 +209,12 @@ namespace UnitySetup.Editor
             File.Delete($"{contentInfo.Title}.unitypackage");
         }
 
-        private void InstallPackageManagerContent(ContentInfo contentInfo)
+        private void InstallPackageManagerContents()
         {
-            if (string.IsNullOrWhiteSpace(contentInfo.Content))
-            {
-                Debug.LogError($"Skip Install Content {contentInfo.Title}");
-                return;
-            }
+            var packages = _packageUrls.ToArray();
+            Client.AddAndRemove(packages);
 
-            Client.Add(contentInfo.Content);
+            _installedPackage.AddRange(packages);
         }
     }
 
@@ -216,8 +230,8 @@ namespace UnitySetup.Editor
 
     public enum ContentType
     {
+        PackageManager,
         Zip,
         UnityPackage,
-        PackageManager,
     }
 }
