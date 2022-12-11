@@ -165,30 +165,40 @@ namespace UnitySetup.Editor
 
                 var content = _contents[e.Key];
                 return content;
-            }).Where(e => e != null).OrderBy(e => e.Type);
+            }).Where(e => e != null).GroupBy(e => e.Type, e => e);
             _installPackageCount = orderBy.GetHashCode();
 
-            foreach (var contentInfo in orderBy)
+            foreach (var group in orderBy)
             {
-                switch (contentInfo.Type)
+                foreach (var contentInfo in group)
                 {
-                    case ContentType.Zip:
-                        InstallZipContent(contentInfo);
-                        break;
-                    case ContentType.UnityPackage:
-                        InstallUnityPackageContent(contentInfo);
-                        break;
-                    case ContentType.PackageManager:
-                        if (string.IsNullOrWhiteSpace(contentInfo.Content))
-                        {
-                            Debug.LogError($"Skip Install Content {contentInfo.Title}");
-                            return;
-                        }
+                    switch (group.Key)
+                    {
+                        case ContentType.Zip:
+                            InstallZipContent(contentInfo);
+                            break;
+                        case ContentType.UnityPackage:
+                            InstallUnityPackageContent(contentInfo);
+                            break;
+                        case ContentType.PackageManager:
+                            if (string.IsNullOrWhiteSpace(contentInfo.Content))
+                            {
+                                Debug.LogError($"Skip Install Content {contentInfo.Title}");
+                                return;
+                            }
 
-                        _packageUrls.Add(contentInfo.Content);
-                        break;
+                            _packageUrls.Add(contentInfo.Content);
+                            break;
+                    }
+                }
+
+                if (group.Key == ContentType.PackageManager)
+                {
+                    InstallPackageManagerContents();
                 }
             }
+
+            InstallPackageManagerContents();
         }
 
         private void InstallZipContent(ContentInfo contentInfo)
