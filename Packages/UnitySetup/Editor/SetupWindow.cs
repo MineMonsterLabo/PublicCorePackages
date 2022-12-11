@@ -57,6 +57,10 @@ namespace UnitySetup.Editor
             if (_installedPackage.Count >= _installPackageCount)
             {
                 EditorApplication.UnlockReloadAssemblies();
+
+                _installPackageCount = 0;
+                _installedPackage.Clear();
+                _packageUrls.Clear();
             }
         }
 
@@ -64,6 +68,7 @@ namespace UnitySetup.Editor
         {
             _installPackageCount = 0;
             _installedPackage.Clear();
+            _packageUrls.Clear();
 
             EditorApplication.UnlockReloadAssemblies();
         }
@@ -150,7 +155,7 @@ namespace UnitySetup.Editor
                     Type = (ContentType)contentObj.Value<int>("type")
                 };
                 _contents.Add(content);
-                _installList[_contents.IndexOf(content)] = true;
+                _installList[_contents.IndexOf(content)] = !contentObj.Value<bool>("optional");
             }
         }
 
