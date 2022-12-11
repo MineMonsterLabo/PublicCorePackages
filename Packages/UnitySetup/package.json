@@ -1,0 +1,8 @@
+{
+  "name": "com.minemonsterlabo.unity_setup",
+  "author": "hiroki,minemonsterlabo",
+  "version": "1.0.0",
+  "displayName": "UnitySetup",
+  "type": "library",
+  "unity": "2021.1"
+}

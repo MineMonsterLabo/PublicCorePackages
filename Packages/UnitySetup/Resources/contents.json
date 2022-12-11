@@ -1,0 +1,35 @@
+{
+  "contents": [
+    {
+      "title": "UniTask",
+      "description": "https://github.com/Cysharp/UniTask.git?path=src/UniTask/Assets/Plugins/UniTask",
+      "content": "",
+      "type": 2
+    },
+    {
+      "title": "UniRx",
+      "description": "https://github.com/neuecc/UniRx.git?path=Assets/Plugins/UniRx/Scripts",
+      "content": "",
+      "type": 2
+    },
+    {
+      "title": "ParameterSceneManager",
+      "description": "https://github.com/MineMonsterLabo/PublicCoreUnityPackages.git?path=Packages/ParameterSceneManager",
+      "content": "",
+      "type": 2
+    },
+    {
+      "title": "Zenject",
+      "description": "",
+      "content": "https://github.com/modesttree/Zenject/releases/download/9.2.0/Extenject.unitypackage",
+      "type": 1
+    },
+    {
+      "title": "TextMeshPro Japanese",
+      "description": "",
+      "content": "",
+      "type": 1,
+      "ignore": true
+    }
+  ]
+}
