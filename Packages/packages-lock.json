@@ -19,6 +19,14 @@
       "source": "embedded",
       "dependencies": {}
     },
+    "com.minemonsterlabo.localize": {
+      "version": "file:Localize",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {
+        "com.unity.nuget.newtonsoft-json": "3.0.2"
+      }
+    },
     "com.minemonsterlabo.marine_lang": {
       "version": "file:MarineLang",
       "depth": 0,

@@ -46,6 +46,12 @@
       "type": 2
     },
     {
+      "title": "InterfaceHost",
+      "description": "",
+      "content": "https://github.com/MineMonsterLabo/PublicCoreUnityPackages/raw/master/Assets/Plugins/InterfaceHost/InterfaceHost.unitypackage",
+      "type": 2
+    },
+    {
       "title": "TextMeshPro Japanese",
       "description": "",
       "content": "",

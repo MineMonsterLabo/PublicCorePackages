@@ -1,0 +1,11 @@
+{
+  "name": "com.minemonsterlabo.localize",
+  "author": "hiroki",
+  "version": "1.0.0",
+  "displayName": "Localize",
+  "type": "library",
+  "unity": "2021.1",
+  "dependencies": {
+    "com.unity.nuget.newtonsoft-json": "3.0.2"
+  }
+}
