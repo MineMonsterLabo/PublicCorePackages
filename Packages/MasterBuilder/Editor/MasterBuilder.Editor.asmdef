@@ -1,6 +1,6 @@
 {
-    "name": "Localize",
-    "rootNamespace": "Localize",
+    "name": "MasterBuilder.Editor",
+    "rootNamespace": "MasterBuilder",
     "references": [],
     "includePlatforms": [],
     "excludePlatforms": [],

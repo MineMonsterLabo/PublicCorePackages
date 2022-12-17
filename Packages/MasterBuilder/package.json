@@ -1,8 +1,8 @@
 {
-  "name": "com.minemonsterlabo.localize",
+  "name": "com.minemonsterlabo.master_builder",
   "author": "hiroki",
   "version": "1.0.0",
-  "displayName": "Localize",
+  "displayName": "MasterBuilder",
   "type": "library",
   "unity": "2021.1",
   "dependencies": {
