@@ -40,6 +40,13 @@
       "optional": true
     },
     {
+      "title": "Localize",
+      "description": "",
+      "content": "https://github.com/MineMonsterLabo/PublicCoreUnityPackages.git?path=Packages/Localize",
+      "type": 0,
+      "optional": true
+    },
+    {
       "title": "Zenject",
       "description": "",
       "content": "https://github.com/modesttree/Zenject/releases/download/9.2.0/Extenject.unitypackage",
@@ -49,7 +56,8 @@
       "title": "InterfaceHost",
       "description": "",
       "content": "https://github.com/MineMonsterLabo/PublicCoreUnityPackages/raw/master/Assets/Plugins/InterfaceHost/InterfaceHost.unitypackage",
-      "type": 2
+      "type": 2,
+      "optional": true
     },
     {
       "title": "TextMeshPro Japanese",
