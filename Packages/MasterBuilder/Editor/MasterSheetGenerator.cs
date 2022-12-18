@@ -97,7 +97,7 @@ namespace MasterBuilder.Editor
             var properties =
                 type.GetProperties(BindingFlags.FlattenHierarchy | BindingFlags.Instance | BindingFlags.Public |
                                    BindingFlags.NonPublic)
-                    .OrderBy(e => e.GetCustomAttribute<MasterColumnAttribute>()?.Order ?? 0);
+                    .OrderBy(e => e.GetCustomAttribute<MasterColumnAttribute>()?.Order ?? -1);
 
             var row = 2;
             var col = 2;
@@ -139,11 +139,15 @@ namespace MasterBuilder.Editor
 
                 GenerateXlsxSheetColumn(workSheet, masterAttribute.Contexts, propertyInfo, ref row, ref col);
             }
+
+            workSheet.Columns().Width = 20;
+            workSheet.Column(1).Width = 1;
         }
 
         private static void GenerateXlsxSheetColumn(IXLWorksheet workSheet, string[] contexts,
             PropertyInfo propertyInfo, ref int row, ref int col)
         {
+            var infoStartRow = row;
             var propertyType = propertyInfo.PropertyType;
             var masterColumnAttribute = propertyInfo.GetCustomAttribute<MasterColumnAttribute>();
             var masterReferenceAttribute = propertyInfo.GetCustomAttribute<MasterReferenceAttribute>();
@@ -159,11 +163,15 @@ namespace MasterBuilder.Editor
 
             foreach (var context in enableContexts)
             {
+                row = infoStartRow;
+
                 var columnNameCell = workSheet.Cell(++row, col);
                 var typeCell = workSheet.Cell(++row, col);
                 var requireCell = workSheet.Cell(++row, col);
                 var contextCell = workSheet.Cell(++row, col);
                 var valueCell = workSheet.Cell(++row, col);
+
+                ++col;
                 if (context == "shadow-column")
                 {
                     continue;
@@ -178,8 +186,6 @@ namespace MasterBuilder.Editor
 
                 var validation = valueCell.GetDataValidation() ?? valueCell.CreateDataValidation();
                 validation.AllowedValues = TypeFromAllowedValues(propertyType);
-
-                ++col;
             }
         }
 

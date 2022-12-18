@@ -39,7 +39,7 @@ namespace MasterBuilder.Editor
 
             var masterAttribute = innerType.GetCustomAttribute<MasterAttribute>();
             var masterName = innerType.Name[..(innerType.Name.Length <= 15 ? innerType.Name.Length : 15)];
-            if (masterAttribute != null)
+            if (masterAttribute != null && !string.IsNullOrWhiteSpace(masterAttribute.Name))
             {
                 masterName = masterAttribute.Name[..(innerType.Name.Length <= 15 ? innerType.Name.Length : 15)];
             }
