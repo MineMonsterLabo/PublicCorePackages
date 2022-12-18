@@ -1,6 +1,9 @@
-﻿namespace MasterBuilder.Attributes
+﻿using System;
+
+namespace MasterBuilder.Attributes
 {
-    public class MasterIgnoreAttribute
+    [AttributeUsage(AttributeTargets.Property)]
+    public class MasterIgnoreAttribute : Attribute
     {
     }
 }

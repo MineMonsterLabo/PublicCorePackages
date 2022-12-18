@@ -5,7 +5,7 @@ using UnityEngine;
 namespace MasterBuilder
 {
     public abstract class MasterDefinitionCollectionBase<TKey, TMasterDefine> : ScriptableObject,
-        ICollection<TMasterDefine> where TMasterDefine : MasterDefinition<TKey>
+        ICollection<TMasterDefine>, IMasterDefinitionCollection where TMasterDefine : MasterDefinition<TKey>
     {
         protected abstract List<TMasterDefine> InnerCollection { get; }
 

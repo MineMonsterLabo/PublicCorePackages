@@ -1,6 +1,14 @@
-﻿namespace MasterBuilder.Attributes
+﻿using System;
+
+namespace MasterBuilder.Attributes
 {
-    public class MasterColumnAttribute
+    [AttributeUsage(AttributeTargets.Property)]
+    public class MasterColumnAttribute : Attribute
     {
+        public string Name { get; set; }
+        public string Description { get; set; }
+
+        public string IsContextSwitch { get; set; }
+        public string[] DisableContexts { get; set; }
     }
 }

@@ -1,6 +1,12 @@
-﻿namespace MasterBuilder.Attributes
+﻿using System;
+
+namespace MasterBuilder.Attributes
 {
-    public class MasterReferenceAttribute
+    [AttributeUsage(AttributeTargets.Property)]
+    public class MasterReferenceAttribute : Attribute
     {
+        public Type ReferenceType { get; set; }
+
+        public string ReferenceKeyName { get; set; }
     }
 }

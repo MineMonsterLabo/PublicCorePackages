@@ -1,12 +1,22 @@
 {
     "name": "MasterBuilder.Editor",
     "rootNamespace": "MasterBuilder",
-    "references": [],
+    "references": [
+        "GUID:2c728ffc3392521448550c2debd656ba"
+    ],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
-    "overrideReferences": false,
-    "precompiledReferences": [],
+    "overrideReferences": true,
+    "precompiledReferences": [
+        "ClosedXML.dll",
+        "DocumentFormat.OpenXml.dll",
+        "DocumentFormat.OpenXml.Features.dll",
+        "DocumentFormat.OpenXml.Linq.dll",
+        "ExcelNumberFormat.dll",
+        "System.Drawing.Common.dll",
+        "System.IO.Packaging.dll"
+    ],
     "autoReferenced": true,
     "defineConstraints": [],
     "versionDefines": [],
