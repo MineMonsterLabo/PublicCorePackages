@@ -141,7 +141,7 @@ namespace MasterBuilder.Editor
             }
 
             workSheet.Columns().Width = 20;
-            workSheet.Column(1).Width = 1;
+            workSheet.Column(1).Width = 2;
         }
 
         private static void GenerateXlsxSheetColumn(IXLWorksheet workSheet, string[] contexts,
