@@ -33,14 +33,18 @@ namespace MasterBuilder.Editor
                 throw new ArgumentException(
                     $"The type `{type.FullName}` could not be assigned to a `ScriptableObject`.");
 
-            var masterAttribute = type.GetCustomAttribute<MasterAttribute>();
-            var masterName = type.Name.Substring(0, 15);
+            var innerType = type.GetMethod("GetEnumerator")?.ReturnType.GetGenericArguments()[0];
+            if (innerType == null)
+                throw new ArgumentException("`GetEnumerator` not found.");
+
+            var masterAttribute = innerType.GetCustomAttribute<MasterAttribute>();
+            var masterName = innerType.Name[..(innerType.Name.Length <= 15 ? innerType.Name.Length : 15)];
             if (masterAttribute != null)
             {
-                masterName = masterAttribute.Name;
+                masterName = masterAttribute.Name[..(innerType.Name.Length <= 15 ? innerType.Name.Length : 15)];
             }
 
-            _masterTypes[masterName] = type;
+            _masterTypes[masterName] = innerType;
         }
     }
 }

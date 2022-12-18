@@ -9,6 +9,8 @@ namespace MasterBuilder.Editor
         public static void Initialize()
         {
             MasterRegistry.RegisterMasterType(typeof(LocalizeStringCollection));
+
+            AssemblyReloadEvents.afterAssemblyReload += AfterAssemblyReload;
         }
 
         [MenuItem("Master/Generate Xlsx Sheet")]
@@ -20,6 +22,11 @@ namespace MasterBuilder.Editor
         [MenuItem("Master/Reimport Xlsx Sheet")]
         public static void ReImportSheet()
         {
+        }
+
+        private static void AfterAssemblyReload()
+        {
+            MasterSheetGenerator.Generate(MasterRegistry.MasterTypes);
         }
     }
 }

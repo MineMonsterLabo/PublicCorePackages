@@ -8,7 +8,11 @@ namespace MasterBuilder.Attributes
         public string Name { get; set; }
         public string Description { get; set; }
 
-        public string IsContextSwitch { get; set; }
+        public bool IsAllowEmpty { get; set; }
+
+        public int Order { get; set; }
+
+        public bool IsContextSwitch { get; set; }
         public string[] DisableContexts { get; set; }
     }
 }
