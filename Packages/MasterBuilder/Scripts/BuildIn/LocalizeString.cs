@@ -1,5 +1,6 @@
 ﻿using System;
 using MasterBuilder.Attributes;
+using UnityEngine;
 
 namespace MasterBuilder.BuildIn
 {
@@ -7,6 +8,8 @@ namespace MasterBuilder.BuildIn
     [Master(Contexts = new[] { "ja-JP", "en-US" })]
     public class LocalizeString : MasterDefinition<string>
     {
-        [MasterColumn(IsContextSwitch = true)] public string Value { get; private set; }
+        [field: SerializeField]
+        [MasterColumn(IsContextSwitch = true)]
+        public string Value { get; private set; }
     }
 }

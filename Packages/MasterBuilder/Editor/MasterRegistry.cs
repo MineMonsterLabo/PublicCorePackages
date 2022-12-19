@@ -9,6 +9,7 @@ namespace MasterBuilder.Editor
     public static class MasterRegistry
     {
         private static readonly Dictionary<string, Type> _masterTypes = new Dictionary<string, Type>();
+        private static readonly Dictionary<Type, Type> _linkedCollectionTypes = new Dictionary<Type, Type>();
 
         public static IReadOnlyDictionary<string, Type> MasterTypes => _masterTypes;
 
@@ -45,6 +46,15 @@ namespace MasterBuilder.Editor
             }
 
             _masterTypes[masterName] = innerType;
+            _linkedCollectionTypes[innerType] = type;
+        }
+
+        public static Type GetMasterCollectionType(Type type)
+        {
+            if (!_linkedCollectionTypes.ContainsKey(type))
+                return null;
+
+            return _linkedCollectionTypes[type];
         }
     }
 }

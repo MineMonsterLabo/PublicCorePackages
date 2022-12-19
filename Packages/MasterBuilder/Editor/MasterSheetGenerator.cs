@@ -106,7 +106,7 @@ namespace MasterBuilder.Editor
             var contextsLabelCell = workSheet.Cell(++row, col);
             var contextsCell = workSheet.Cell(row, col + 1);
             classNameLabelCell.Value = "ClassName:";
-            classNameCell.Value = type.FullName;
+            classNameCell.Value = type.AssemblyQualifiedName;
             contextsLabelCell.Value = "Contexts:";
             contextsCell.Value = string.Join(",", masterAttribute.Contexts);
 
