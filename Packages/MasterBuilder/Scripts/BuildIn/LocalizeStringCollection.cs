@@ -3,10 +3,11 @@ using UnityEngine;
 
 namespace MasterBuilder.BuildIn
 {
-    public abstract class LocalizeStringCollection : MasterDefinitionCollectionBase<string, LocalizeString>
+    public abstract class LocalizeStringCollection<TLocalize> : MasterDefinitionCollectionBase<string, TLocalize>
+        where TLocalize : LocalizeString
     {
-        [SerializeField] private List<LocalizeString> _innerCollection = new List<LocalizeString>();
+        [SerializeField] private List<TLocalize> _innerCollection = new List<TLocalize>();
 
-        protected override List<LocalizeString> InnerCollection => _innerCollection;
+        protected override List<TLocalize> InnerCollection => _innerCollection;
     }
 }

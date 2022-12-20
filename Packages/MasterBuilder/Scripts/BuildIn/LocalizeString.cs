@@ -5,7 +5,6 @@ using UnityEngine;
 namespace MasterBuilder.BuildIn
 {
     [Serializable]
-    [Master(Contexts = new[] { "ja-JP", "en-US" })]
     public abstract class LocalizeString : MasterDefinition<string>
     {
         [field: SerializeField]
