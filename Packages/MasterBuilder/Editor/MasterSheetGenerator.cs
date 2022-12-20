@@ -92,7 +92,7 @@ namespace MasterBuilder.Editor
             var masterAttribute = type.GetCustomAttribute<MasterAttribute>() ?? new MasterAttribute
             {
                 Name = name,
-                Contexts = new[] { "en-US" }
+                Contexts = new[] { "default" }
             };
             var properties =
                 type.GetProperties(BindingFlags.FlattenHierarchy | BindingFlags.Instance | BindingFlags.Public |

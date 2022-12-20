@@ -7,6 +7,6 @@ namespace MasterBuilder.Attributes
     {
         public string Name { get; set; }
 
-        public string[] Contexts { get; set; } = { "en-US" };
+        public string[] Contexts { get; set; } = { "default" };
     }
 }
