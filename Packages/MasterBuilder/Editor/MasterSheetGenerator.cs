@@ -154,7 +154,7 @@ namespace MasterBuilder.Editor
             var masterReferenceAttribute = propertyInfo.GetCustomAttribute<MasterReferenceAttribute>();
 
             var isContextSwitch = masterColumnAttribute?.IsContextSwitch ?? false;
-            var isMultiColumn = propertyType.IsSubclassOf(typeof(Enum)) || masterReferenceAttribute != null;
+            var isMultiColumn = masterReferenceAttribute != null;
             var enableContexts = isMultiColumn ? new[] { "any-context", "shadow-column" } : new[] { "any-context" };
             if (isContextSwitch)
             {
@@ -175,6 +175,17 @@ namespace MasterBuilder.Editor
                 ++col;
                 if (context == "shadow-column")
                 {
+                    columnNameCell.Value = $"D_{propertyInfo.Name}";
+                    columnNameCell.Style.Fill.BackgroundColor = XLColor.GreenYellow;
+                    typeCell.Value = "Reference";
+                    requireCell.Value = string.Empty;
+                    // contextCell.Value = isContextSwitch ? context : string.Empty;
+                    contextCell.Style.Fill.BackgroundColor = XLColor.Aquamarine;
+
+                    // var masterName = MasterRegistry.GetTypeFromMasterName(masterReferenceAttribute?.ReferenceType);
+                    var listValidation = valueCell.GetDataValidation() ?? valueCell.CreateDataValidation();
+                    listValidation.AllowedValues = XLAllowedValues.List;
+                    // listValidation.List($"=OFFSET({masterName}!$D$10, 0, 0, COUNTA(D:D), 0)");
                     continue;
                 }
 
@@ -187,6 +198,12 @@ namespace MasterBuilder.Editor
 
                 var validation = valueCell.GetDataValidation() ?? valueCell.CreateDataValidation();
                 validation.AllowedValues = TypeFromAllowedValues(propertyType);
+
+                if (validation.AllowedValues == XLAllowedValues.WholeNumber)
+                    validation.WholeNumber.Between(int.MinValue, int.MaxValue);
+
+                if (validation.AllowedValues == XLAllowedValues.Decimal)
+                    validation.Decimal.Between(Double.MinValue, Double.MaxValue);
             }
         }
 
@@ -197,13 +214,14 @@ namespace MasterBuilder.Editor
 
         private static bool IsSupportTypes(Type type)
         {
-            return type == typeof(int) || type == typeof(float) || type == typeof(string) ||
-                   type.IsSubclassOf(typeof(Enum));
+            return type == typeof(int) || type == typeof(float) || type == typeof(string);
         }
 
         private static XLAllowedValues TypeFromAllowedValues(Type type)
         {
-            if (type == typeof(int) || type == typeof(float))
+            if (type == typeof(int))
+                return XLAllowedValues.WholeNumber;
+            if (type == typeof(float))
                 return XLAllowedValues.Decimal;
 
             return XLAllowedValues.AnyValue;

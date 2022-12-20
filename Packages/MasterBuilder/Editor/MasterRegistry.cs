@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using MasterBuilder.Attributes;
 using UnityEngine;
@@ -70,6 +71,11 @@ namespace MasterBuilder.Editor
                 return null;
 
             return _linkedCollectionTypes[type];
+        }
+
+        public static string GetTypeFromMasterName(Type type)
+        {
+            return _masterTypes.FirstOrDefault(e => e.Value == type).Key;
         }
     }
 }
