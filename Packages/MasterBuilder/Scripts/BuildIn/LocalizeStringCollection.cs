@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace MasterBuilder.BuildIn
 {
-    public class LocalizeStringCollection : MasterDefinitionCollectionBase<string, LocalizeString>
+    public abstract class LocalizeStringCollection : MasterDefinitionCollectionBase<string, LocalizeString>
     {
         [SerializeField] private List<LocalizeString> _innerCollection = new List<LocalizeString>();
 

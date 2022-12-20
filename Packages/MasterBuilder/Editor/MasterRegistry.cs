@@ -27,6 +27,9 @@ namespace MasterBuilder.Editor
             var types = assembly.GetTypes();
             foreach (var type in types)
             {
+                if (type.IsAbstract || type.IsInterface)
+                    continue;
+
                 if (!typeof(IMasterDefinitionCollection).IsAssignableFrom(type))
                     continue;
 
@@ -42,6 +45,9 @@ namespace MasterBuilder.Editor
             if (!typeof(ScriptableObject).IsAssignableFrom(type))
                 throw new ArgumentException(
                     $"The type `{type.FullName}` could not be assigned to a `ScriptableObject`.");
+
+            if (type.IsAbstract || type.IsInterface)
+                throw new ArgumentException("The type `{type.FullName}` could not be instantiated.");
 
             var innerType = type.GetMethod("GetEnumerator")?.ReturnType.GetGenericArguments()[0];
             if (innerType == null)
