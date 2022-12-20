@@ -116,11 +116,11 @@ namespace MasterBuilder.Editor
                             }
 
                             if (!property.CanWrite)
-                            {
                                 property = property.DeclaringType?.GetProperty(columnInfo.Name);
-                            }
 
-                            property?.SetValue(typeInstance, valueCell.CachedValue);
+                            var value = valueCell.CachedValue ?? (property?.GetValue(typeInstance) ??
+                                                                  GetDefaultValue(property?.PropertyType));
+                            property?.SetValue(typeInstance, Convert.ChangeType(value, property.PropertyType));
                         }
                     }
 
@@ -138,6 +138,20 @@ namespace MasterBuilder.Editor
             }
 
             return soList.ToArray();
+        }
+
+        private static object GetDefaultValue(Type type)
+        {
+            if (type == typeof(int))
+                return default(int);
+            if (type == typeof(float))
+                return default(float);
+            if (type == typeof(string))
+                return string.Empty;
+            if (type.IsSubclassOf(typeof(Enum)))
+                return default(Enum);
+
+            return default;
         }
 
         private class ColumnInfo
