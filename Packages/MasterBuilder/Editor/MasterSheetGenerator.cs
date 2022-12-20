@@ -181,7 +181,7 @@ namespace MasterBuilder.Editor
                 columnNameCell.Value = propertyInfo.Name;
                 columnNameCell.Style.Fill.BackgroundColor = XLColor.GreenYellow;
                 typeCell.Value = propertyType.Name;
-                requireCell.Value = ToYesNoString(masterColumnAttribute?.IsAllowEmpty ?? true);
+                requireCell.Value = ToYesNoString(!masterColumnAttribute?.IsAllowEmpty ?? true);
                 contextCell.Value = isContextSwitch ? context : string.Empty;
                 contextCell.Style.Fill.BackgroundColor = XLColor.Aquamarine;
 
