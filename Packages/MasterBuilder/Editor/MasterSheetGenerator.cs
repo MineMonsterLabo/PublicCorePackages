@@ -140,6 +140,7 @@ namespace MasterBuilder.Editor
                 GenerateXlsxSheetColumn(workSheet, masterAttribute.Contexts, propertyInfo, ref row, ref col);
             }
 
+            workSheet.SheetView.Freeze(10, 3);
             workSheet.Columns().Width = 20;
             workSheet.Column(1).Width = 2;
         }
