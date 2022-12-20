@@ -13,6 +13,15 @@ namespace MasterBuilder.Editor
 
         public static IReadOnlyDictionary<string, Type> MasterTypes => _masterTypes;
 
+        public static void RegisterMasterTypeFromAssemblies()
+        {
+            var assemblies = AppDomain.CurrentDomain.GetAssemblies();
+            foreach (var assembly in assemblies)
+            {
+                RegisterMasterTypeFromAssembly(assembly);
+            }
+        }
+
         public static void RegisterMasterTypeFromAssembly(Assembly assembly)
         {
             var types = assembly.GetTypes();

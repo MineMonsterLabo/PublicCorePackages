@@ -1,5 +1,4 @@
-﻿using MasterBuilder.BuildIn;
-using UnityEditor;
+﻿using UnityEditor;
 
 namespace MasterBuilder.Editor
 {
@@ -8,8 +7,6 @@ namespace MasterBuilder.Editor
         [InitializeOnLoadMethod]
         public static void Initialize()
         {
-            MasterRegistry.RegisterMasterType(typeof(LocalizeStringCollection));
-
             AssemblyReloadEvents.afterAssemblyReload += AfterAssemblyReload;
         }
 
@@ -26,7 +23,11 @@ namespace MasterBuilder.Editor
 
         private static void AfterAssemblyReload()
         {
-            MasterSheetGenerator.Generate(MasterRegistry.MasterTypes);
+            if (EditorOptions.IsEnableAutoRegisterType)
+                MasterRegistry.RegisterMasterTypeFromAssemblies();
+
+            if (EditorOptions.IsEnableAutoGenerateSheet)
+                MasterSheetGenerator.Generate(MasterRegistry.MasterTypes);
         }
     }
 }
