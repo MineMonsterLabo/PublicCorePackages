@@ -16,7 +16,7 @@ namespace MasterBuilder.Editor
             using var workbook = new XLWorkbook(steam);
 
             var masterList = ScriptableObject.CreateInstance<MasterList>();
-            ctx.AddObjectToAsset("Master", masterList);
+            ctx.AddObjectToAsset("Masters", masterList);
             ctx.SetMainObject(masterList);
 
             foreach (var workSheet in workbook.Worksheets)
