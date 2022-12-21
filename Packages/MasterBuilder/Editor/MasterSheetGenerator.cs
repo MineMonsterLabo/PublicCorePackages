@@ -113,6 +113,8 @@ namespace MasterBuilder.Editor
             contextsLabelCell.SetCellValue("Contexts:");
             contextsCell.SetCellValue(string.Join(",", masterAttribute.Contexts));
 
+            workSheet.SetColumnWidth(col, 4000);
+
             col = 2;
             row += 2;
             var infoStartRow = row;
@@ -172,6 +174,8 @@ namespace MasterBuilder.Editor
                 var requireCell = workSheet.GetCell(++row, col);
                 var contextCell = workSheet.GetCell(++row, col);
                 var valueCell = workSheet.GetCell(++row, col);
+
+                workSheet.SetColumnWidth(col, 6000);
 
                 ++col;
                 if (context == "shadow-column")
