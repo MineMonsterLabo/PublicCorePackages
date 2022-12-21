@@ -175,10 +175,10 @@ namespace MasterBuilder.Editor
                 ++col;
                 if (context == "shadow-column")
                 {
-                    columnNameCell.Value = $"D_{propertyInfo.Name}";
+                    columnNameCell.Value = $"D__{propertyInfo.Name}";
                     columnNameCell.Style.Fill.BackgroundColor = XLColor.GreenYellow;
                     typeCell.Value = "Reference";
-                    requireCell.Value = string.Empty;
+                    requireCell.Value = "no";
                     // contextCell.Value = isContextSwitch ? context : string.Empty;
                     contextCell.Style.Fill.BackgroundColor = XLColor.Aquamarine;
 

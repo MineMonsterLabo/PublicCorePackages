@@ -99,6 +99,12 @@ namespace MasterBuilder.Editor
                     var typeInstance = Activator.CreateInstance(type);
                     foreach (var columnInfo in columnInfos)
                     {
+                        if (columnInfo.Name.StartsWith("D__"))
+                        {
+                            ++col;
+                            continue;
+                        }
+
                         var valueCell = workSheet.Cell(row, ++col);
                         if (string.IsNullOrWhiteSpace(columnInfo.Context) || columnInfo.Context == context)
                         {
