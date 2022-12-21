@@ -15,5 +15,9 @@ namespace MasterBuilder.Examples
         [MasterReference(ReferenceType = typeof(ItemType), ReferenceKeyName = nameof(ItemType.Key),
             DisplayColumnName = nameof(ItemType.Name))]
         public int ItemTypeId { get; set; }
+
+        [field: SerializeField]
+        [MasterColumn(IsAllowEmpty = true)]
+        public string Tag { get; set; }
     }
 }
