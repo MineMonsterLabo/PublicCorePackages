@@ -3,8 +3,11 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using ClosedXML.Excel;
 using MasterBuilder.Attributes;
+using MasterBuilder.Editor.Extensions;
+using NPOI.HSSF.Util;
+using NPOI.SS.UserModel;
+using NPOI.XSSF.UserModel;
 using UnityEditor;
 using UnityEngine;
 
@@ -63,32 +66,32 @@ namespace MasterBuilder.Editor
 
         private static void GenerateXlsxFile(GenerateInfo info)
         {
-            using var workbook = File.Exists($"{info.Attribute.AssetPath}.xlsx")
-                ? new XLWorkbook($"{info.Attribute.AssetPath}.xlsx")
-                : new XLWorkbook();
-
+            var isFileExists = File.Exists($"{info.Attribute.AssetPath}.xlsx");
+            var workbook = isFileExists
+                ? new XSSFWorkbook(new FileStream($"{info.Attribute.AssetPath}.xlsx", FileMode.Open, FileAccess.Read,
+                    FileShare.ReadWrite))
+                : new XSSFWorkbook();
             foreach (var pair in info.Types)
             {
                 GenerateXlsxSheet(workbook, pair.Key, pair.Value);
             }
 
-            if (workbook.Worksheets.Count == 0)
+            if (workbook.Count == 0)
             {
                 Debug.LogWarning("生成が必要なシートはないため、作成をスキップしました。");
                 return;
             }
 
-            workbook.SaveAs($"{info.Attribute.AssetPath}.xlsx");
+            using var steam = new FileStream($"{info.Attribute.AssetPath}.xlsx", FileMode.OpenOrCreate,
+                FileAccess.ReadWrite);
+            workbook.Write(steam, false);
+
             AssetDatabase.Refresh();
         }
 
-        private static void GenerateXlsxSheet(XLWorkbook workbook, string name, Type type)
+        private static void GenerateXlsxSheet(IWorkbook workbook, string name, Type type)
         {
-            if (!workbook.TryGetWorksheet(name, out var workSheet))
-            {
-                workSheet = workbook.AddWorksheet(name);
-            }
-
+            var workSheet = workbook.GetSheet(name) ?? workbook.CreateSheet(name);
             var masterAttribute = type.GetCustomAttribute<MasterAttribute>() ?? new MasterAttribute
             {
                 Name = name,
@@ -101,28 +104,28 @@ namespace MasterBuilder.Editor
 
             var row = 2;
             var col = 2;
-            var classNameLabelCell = workSheet.Cell(row, col);
-            var classNameCell = workSheet.Cell(row, col + 1);
-            var contextsLabelCell = workSheet.Cell(++row, col);
-            var contextsCell = workSheet.Cell(row, col + 1);
-            classNameLabelCell.Value = "ClassName:";
-            classNameCell.Value = type.AssemblyQualifiedName;
-            contextsLabelCell.Value = "Contexts:";
-            contextsCell.Value = string.Join(",", masterAttribute.Contexts);
+            var classNameLabelCell = workSheet.GetCell(row, col);
+            var classNameCell = workSheet.GetCell(row, col + 1);
+            var contextsLabelCell = workSheet.GetCell(++row, col);
+            var contextsCell = workSheet.GetCell(row, col + 1);
+            classNameLabelCell.SetCellValue("ClassName:");
+            classNameCell.SetCellValue(type.AssemblyQualifiedName);
+            contextsLabelCell.SetCellValue("Contexts:");
+            contextsCell.SetCellValue(string.Join(",", masterAttribute.Contexts));
 
             col = 2;
             row += 2;
             var infoStartRow = row;
-            var columnNameLabelCell = workSheet.Cell(++row, col);
-            var typeLabelCell = workSheet.Cell(++row, col);
-            var requireLabelCell = workSheet.Cell(++row, col);
-            var contextLabelCell = workSheet.Cell(++row, col);
-            columnNameLabelCell.Value = "ColumnName:";
-            columnNameLabelCell.Style.Fill.BackgroundColor = XLColor.GreenYellow;
-            typeLabelCell.Value = "Type:";
-            requireLabelCell.Value = "Require:";
-            contextLabelCell.Value = "Context:";
-            contextLabelCell.Style.Fill.BackgroundColor = XLColor.Aquamarine;
+            var columnNameLabelCell = workSheet.GetCell(++row, col);
+            var typeLabelCell = workSheet.GetCell(++row, col);
+            var requireLabelCell = workSheet.GetCell(++row, col);
+            var contextLabelCell = workSheet.GetCell(++row, col);
+            columnNameLabelCell.SetCellValue("ColumnName:");
+            columnNameLabelCell.CellStyle.FillBackgroundColor = HSSFColor.LightGreen.Index;
+            typeLabelCell.SetCellValue("Type:");
+            requireLabelCell.SetCellValue("Require:");
+            contextLabelCell.SetCellValue("Context:");
+            contextLabelCell.CellStyle.FillBackgroundColor = HSSFColor.Aqua.Index;
 
             ++col;
             foreach (var propertyInfo in properties)
@@ -137,15 +140,13 @@ namespace MasterBuilder.Editor
                 if (masterIgnoreAttribute != null)
                     continue;
 
-                GenerateXlsxSheetColumn(workSheet, masterAttribute.Contexts, propertyInfo, ref row, ref col);
+                GenerateXlsxSheetColumn(workbook, workSheet, masterAttribute.Contexts, propertyInfo, ref row, ref col);
             }
 
-            workSheet.SheetView.Freeze(9, 3);
-            workSheet.Columns().Width = 20;
-            workSheet.Column(1).Width = 2;
+            workSheet.CreateFreezePane(4, 10);
         }
 
-        private static void GenerateXlsxSheetColumn(IXLWorksheet workSheet, string[] contexts,
+        private static void GenerateXlsxSheetColumn(IWorkbook workbook, ISheet workSheet, string[] contexts,
             PropertyInfo propertyInfo, ref int row, ref int col)
         {
             var infoStartRow = row;
@@ -166,44 +167,44 @@ namespace MasterBuilder.Editor
             {
                 row = infoStartRow;
 
-                var columnNameCell = workSheet.Cell(++row, col);
-                var typeCell = workSheet.Cell(++row, col);
-                var requireCell = workSheet.Cell(++row, col);
-                var contextCell = workSheet.Cell(++row, col);
-                var valueCell = workSheet.Cell(++row, col);
+                var columnNameCell = workSheet.GetCell(++row, col);
+                var typeCell = workSheet.GetCell(++row, col);
+                var requireCell = workSheet.GetCell(++row, col);
+                var contextCell = workSheet.GetCell(++row, col);
+                var valueCell = workSheet.GetCell(++row, col);
 
                 ++col;
                 if (context == "shadow-column")
                 {
-                    columnNameCell.Value = $"D__{propertyInfo.Name}";
-                    columnNameCell.Style.Fill.BackgroundColor = XLColor.GreenYellow;
-                    typeCell.Value = "Reference";
-                    requireCell.Value = "no";
+                    columnNameCell.SetCellValue($"D__{propertyInfo.Name}");
+                    columnNameCell.CellStyle.FillBackgroundColor = HSSFColor.LightGreen.Index;
+                    typeCell.SetCellValue("Reference");
+                    requireCell.SetCellValue("no");
                     // contextCell.Value = isContextSwitch ? context : string.Empty;
-                    contextCell.Style.Fill.BackgroundColor = XLColor.Aquamarine;
+                    contextCell.CellStyle.FillBackgroundColor = HSSFColor.Aqua.Index;
 
                     // var masterName = MasterRegistry.GetTypeFromMasterName(masterReferenceAttribute?.ReferenceType);
-                    var listValidation = valueCell.GetDataValidation() ?? valueCell.CreateDataValidation();
-                    listValidation.AllowedValues = XLAllowedValues.List;
+                    // var listValidation = valueCell.GetDataValidation() ?? valueCell.CreateDataValidation();
+                    // listValidation.AllowedValues = XLAllowedValues.List;
                     // listValidation.List($"=OFFSET({masterName}!$D$10, 0, 0, COUNTA(D:D), 0)");
                     continue;
                 }
 
-                columnNameCell.Value = propertyInfo.Name;
-                columnNameCell.Style.Fill.BackgroundColor = XLColor.GreenYellow;
-                typeCell.Value = propertyType.Name;
-                requireCell.Value = ToYesNoString(!masterColumnAttribute?.IsAllowEmpty ?? true);
-                contextCell.Value = isContextSwitch ? context : string.Empty;
-                contextCell.Style.Fill.BackgroundColor = XLColor.Aquamarine;
+                columnNameCell.SetCellValue(propertyInfo.Name);
+                columnNameCell.CellStyle.FillBackgroundColor = HSSFColor.LightGreen.Index;
+                typeCell.SetCellValue(propertyType.Name);
+                requireCell.SetCellValue(ToYesNoString(!masterColumnAttribute?.IsAllowEmpty ?? true));
+                contextCell.SetCellValue(isContextSwitch ? context : string.Empty);
+                contextCell.CellStyle.FillBackgroundColor = HSSFColor.Aqua.Index;
 
-                var validation = valueCell.GetDataValidation() ?? valueCell.CreateDataValidation();
+                /*var validation = valueCell.GetDataValidation() ?? valueCell.CreateDataValidation();
                 validation.AllowedValues = TypeFromAllowedValues(propertyType);
 
                 if (validation.AllowedValues == XLAllowedValues.WholeNumber)
                     validation.WholeNumber.Between(int.MinValue, int.MaxValue);
 
                 if (validation.AllowedValues == XLAllowedValues.Decimal)
-                    validation.Decimal.Between(Double.MinValue, Double.MaxValue);
+                    validation.Decimal.Between(Double.MinValue, Double.MaxValue);*/
             }
         }
 
@@ -217,15 +218,15 @@ namespace MasterBuilder.Editor
             return type == typeof(int) || type == typeof(float) || type == typeof(string);
         }
 
-        private static XLAllowedValues TypeFromAllowedValues(Type type)
-        {
-            if (type == typeof(int))
-                return XLAllowedValues.WholeNumber;
-            if (type == typeof(float))
-                return XLAllowedValues.Decimal;
-
-            return XLAllowedValues.AnyValue;
-        }
+        // private static XLAllowedValues TypeFromAllowedValues(Type type)
+        // {
+        //     if (type == typeof(int))
+        //         return XLAllowedValues.WholeNumber;
+        //     if (type == typeof(float))
+        //         return XLAllowedValues.Decimal;
+        //
+        //     return XLAllowedValues.AnyValue;
+        // }
 
         private class GenerateInfo
         {
