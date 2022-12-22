@@ -92,6 +92,7 @@ namespace MasterBuilder.Editor
         private static void GenerateXlsxSheet(IWorkbook workbook, string name, Type type)
         {
             var workSheet = workbook.GetSheet(name) ?? workbook.CreateSheet(name);
+            var patriarch = workSheet.DrawingPatriarch ?? workSheet.CreateDrawingPatriarch();
             var masterAttribute = type.GetCustomAttribute<MasterAttribute>() ?? new MasterAttribute
             {
                 Name = name,
@@ -156,6 +157,7 @@ namespace MasterBuilder.Editor
         private static void GenerateXlsxSheetColumn(IWorkbook workbook, ISheet workSheet, string[] contexts,
             PropertyInfo propertyInfo, ref int row, ref int col)
         {
+            var patriarch = workSheet.DrawingPatriarch;
             var columnNameColor = IndexedColors.LightYellow;
             var contextNameColor = IndexedColors.LightTurquoise;
             var infoStartRow = row;
@@ -177,6 +179,8 @@ namespace MasterBuilder.Editor
                 row = infoStartRow;
 
                 var columnNameCell = workSheet.GetCell(++row, col);
+                var anchor = new XSSFClientAnchor(0, 0, 0, 0, 4, 2, 6, 8);
+                var cellNameComment = columnNameCell.CellComment ?? patriarch.CreateCellComment(anchor);
                 var typeCell = workSheet.GetCell(++row, col);
                 var requireCell = workSheet.GetCell(++row, col);
                 var contextCell = workSheet.GetCell(++row, col);
@@ -188,6 +192,9 @@ namespace MasterBuilder.Editor
                 if (context == "shadow-column")
                 {
                     columnNameCell.SetCellValue($"D__{propertyInfo.Name}");
+                    cellNameComment.String =
+                        new XSSFRichTextString(masterColumnAttribute?.Description ?? "empty description");
+                    columnNameCell.CellComment = cellNameComment;
                     SetCellColor(columnNameCell, columnNameColor);
 
                     typeCell.SetCellValue("Reference");
@@ -196,7 +203,7 @@ namespace MasterBuilder.Editor
                     // contextCell.Value = isContextSwitch ? context : string.Empty;
                     SetCellColor(contextCell, contextNameColor);
 
-                    // var masterName = MasterRegistry.GetTypeFromMasterName(masterReferenceAttribute?.ReferenceType);
+                    var masterName = MasterRegistry.GetTypeFromMasterName(masterReferenceAttribute?.ReferenceType);
                     // var listValidation = valueCell.GetDataValidation() ?? valueCell.CreateDataValidation();
                     // listValidation.AllowedValues = XLAllowedValues.List;
                     // listValidation.List($"=OFFSET({masterName}!$D$10, 0, 0, COUNTA(D:D), 0)");
@@ -204,6 +211,9 @@ namespace MasterBuilder.Editor
                 }
 
                 columnNameCell.SetCellValue(propertyInfo.Name);
+                cellNameComment.String =
+                    new XSSFRichTextString(masterColumnAttribute?.Description ?? "empty description");
+                columnNameCell.CellComment = cellNameComment;
                 SetCellColor(columnNameCell, columnNameColor);
 
                 typeCell.SetCellValue(propertyType.Name);
