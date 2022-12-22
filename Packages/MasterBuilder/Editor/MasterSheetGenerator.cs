@@ -5,8 +5,8 @@ using System.Linq;
 using System.Reflection;
 using MasterBuilder.Attributes;
 using MasterBuilder.Editor.Extensions;
-using NPOI.HSSF.Util;
 using NPOI.SS.UserModel;
+using NPOI.SS.Util;
 using NPOI.XSSF.UserModel;
 using UnityEditor;
 using UnityEngine;
@@ -117,17 +117,22 @@ namespace MasterBuilder.Editor
 
             col = 2;
             row += 2;
+            var columnNameColor = IndexedColors.LightYellow;
+            var contextNameColor = IndexedColors.LightTurquoise;
             var infoStartRow = row;
             var columnNameLabelCell = workSheet.GetCell(++row, col);
             var typeLabelCell = workSheet.GetCell(++row, col);
             var requireLabelCell = workSheet.GetCell(++row, col);
             var contextLabelCell = workSheet.GetCell(++row, col);
+
             columnNameLabelCell.SetCellValue("ColumnName:");
-            columnNameLabelCell.CellStyle.FillBackgroundColor = HSSFColor.LightGreen.Index;
+            SetCellColor(columnNameLabelCell, columnNameColor);
+
             typeLabelCell.SetCellValue("Type:");
             requireLabelCell.SetCellValue("Require:");
+
             contextLabelCell.SetCellValue("Context:");
-            contextLabelCell.CellStyle.FillBackgroundColor = HSSFColor.Aqua.Index;
+            SetCellColor(contextLabelCell, contextNameColor);
 
             ++col;
             foreach (var propertyInfo in properties)
@@ -151,6 +156,8 @@ namespace MasterBuilder.Editor
         private static void GenerateXlsxSheetColumn(IWorkbook workbook, ISheet workSheet, string[] contexts,
             PropertyInfo propertyInfo, ref int row, ref int col)
         {
+            var columnNameColor = IndexedColors.LightYellow;
+            var contextNameColor = IndexedColors.LightTurquoise;
             var infoStartRow = row;
             var propertyType = propertyInfo.PropertyType;
             var masterColumnAttribute = propertyInfo.GetCustomAttribute<MasterColumnAttribute>();
@@ -181,11 +188,13 @@ namespace MasterBuilder.Editor
                 if (context == "shadow-column")
                 {
                     columnNameCell.SetCellValue($"D__{propertyInfo.Name}");
-                    columnNameCell.CellStyle.FillBackgroundColor = HSSFColor.LightGreen.Index;
+                    SetCellColor(columnNameCell, columnNameColor);
+
                     typeCell.SetCellValue("Reference");
+
                     requireCell.SetCellValue("no");
                     // contextCell.Value = isContextSwitch ? context : string.Empty;
-                    contextCell.CellStyle.FillBackgroundColor = HSSFColor.Aqua.Index;
+                    SetCellColor(contextCell, contextNameColor);
 
                     // var masterName = MasterRegistry.GetTypeFromMasterName(masterReferenceAttribute?.ReferenceType);
                     // var listValidation = valueCell.GetDataValidation() ?? valueCell.CreateDataValidation();
@@ -195,11 +204,13 @@ namespace MasterBuilder.Editor
                 }
 
                 columnNameCell.SetCellValue(propertyInfo.Name);
-                columnNameCell.CellStyle.FillBackgroundColor = HSSFColor.LightGreen.Index;
+                SetCellColor(columnNameCell, columnNameColor);
+
                 typeCell.SetCellValue(propertyType.Name);
                 requireCell.SetCellValue(ToYesNoString(!masterColumnAttribute?.IsAllowEmpty ?? true));
+
                 contextCell.SetCellValue(isContextSwitch ? context : string.Empty);
-                contextCell.CellStyle.FillBackgroundColor = HSSFColor.Aqua.Index;
+                SetCellColor(contextCell, contextNameColor);
 
                 /*var validation = valueCell.GetDataValidation() ?? valueCell.CreateDataValidation();
                 validation.AllowedValues = TypeFromAllowedValues(propertyType);
@@ -220,6 +231,12 @@ namespace MasterBuilder.Editor
         private static bool IsSupportTypes(Type type)
         {
             return type == typeof(int) || type == typeof(float) || type == typeof(string);
+        }
+
+        private static void SetCellColor(ICell cell, IndexedColors colors)
+        {
+            CellUtil.SetCellStyleProperty(cell, CellUtil.FILL_FOREGROUND_COLOR, colors.Index);
+            CellUtil.SetCellStyleProperty(cell, CellUtil.FILL_PATTERN, FillPattern.SolidForeground);
         }
 
         // private static XLAllowedValues TypeFromAllowedValues(Type type)
