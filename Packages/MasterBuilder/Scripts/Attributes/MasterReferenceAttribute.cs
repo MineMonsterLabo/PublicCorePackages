@@ -7,8 +7,8 @@ namespace MasterBuilder.Attributes
     {
         public Type ReferenceType { get; set; }
 
-        public string ReferenceKeyName { get; set; }
+        public int ReferenceKeyColumnIndex { get; set; }
 
-        public string DisplayColumnName { get; set; }
+        public int DisplayColumnIndex { get; set; }
     }
 }

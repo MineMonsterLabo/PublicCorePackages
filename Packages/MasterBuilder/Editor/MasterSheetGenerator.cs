@@ -204,10 +204,14 @@ namespace MasterBuilder.Editor
                     SetCellColor(contextCell, contextNameColor);
 
                     var masterName = MasterRegistry.GetTypeFromMasterName(masterReferenceAttribute?.ReferenceType);
+                    var baseReference = new CellAddress("D11");
+                    var displayAddress =
+                        CellReference.ConvertNumToColString(baseReference.Column +
+                            masterReferenceAttribute?.DisplayColumnIndex ?? 1);
                     var validationHelper = workSheet.GetDataValidationHelper();
                     var constraint =
                         validationHelper.CreateFormulaListConstraint(
-                            $"OFFSET({masterName}!$E$11,0,0,COUNTA({masterName}!E:E))");
+                            $"OFFSET({masterName}!${displayAddress}$11,0,0,COUNTA({masterName}!{displayAddress}:{displayAddress}))");
                     var validationData =
                         validationHelper.CreateValidation(constraint,
                             new CellRangeAddressList(row, row, col - 1, col - 1));
@@ -235,10 +239,17 @@ namespace MasterBuilder.Editor
                 if (isMultiColumn)
                 {
                     var masterName = MasterRegistry.GetTypeFromMasterName(masterReferenceAttribute?.ReferenceType);
+                    var baseReference = new CellAddress("D11");
+                    var keyAddress =
+                        CellReference.ConvertNumToColString(baseReference.Column +
+                                                            masterReferenceAttribute.ReferenceKeyColumnIndex);
+                    var displayAddress =
+                        CellReference.ConvertNumToColString(baseReference.Column +
+                                                            masterReferenceAttribute.DisplayColumnIndex);
                     var colAddress = CellReference.ConvertNumToColString(valueCell.Address.Column + 1);
                     valueCell.SetCellType(CellType.Formula);
                     valueCell.SetCellFormula(
-                        $"INDEX(OFFSET({masterName}!$D$11,0,0,COUNTA({masterName}!D:D),2),MATCH(${colAddress}11,OFFSET({masterName}!$E$11,0,0,COUNTA({masterName}!E:E),1),0),1)");
+                        $"INDEX(OFFSET({masterName}!${keyAddress}$11,0,0,COUNTA({masterName}!{keyAddress}:{keyAddress}),2),MATCH(${colAddress}11,OFFSET({masterName}!${displayAddress}$11,0,0,COUNTA({masterName}!{displayAddress}:{displayAddress}),1),0),1)");
                 }
 
                 /*var validation = valueCell.GetDataValidation() ?? valueCell.CreateDataValidation();
