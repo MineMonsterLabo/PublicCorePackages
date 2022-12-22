@@ -112,7 +112,8 @@ namespace MasterBuilder.Editor
                         var valueCell = workSheet.GetCell(row, ++col);
                         if (string.IsNullOrWhiteSpace(columnInfo.Context) || columnInfo.Context == context)
                         {
-                            if (columnInfo.IsRequire && string.IsNullOrWhiteSpace(valueCell.StringCellValue))
+                            var stringValue = valueCell.GetStringValue();
+                            if (columnInfo.IsRequire && string.IsNullOrWhiteSpace(stringValue))
                             {
                                 isEnd = true;
                                 break;
@@ -128,8 +129,8 @@ namespace MasterBuilder.Editor
                             if (!property.CanWrite)
                                 property = property.DeclaringType?.GetProperty(columnInfo.Name);
 
-                            var value = valueCell.StringCellValue ?? (property?.GetValue(typeInstance) ??
-                                                                      GetDefaultValue(property?.PropertyType));
+                            var value = stringValue ?? (property?.GetValue(typeInstance) ??
+                                                        GetDefaultValue(property?.PropertyType));
                             property?.SetValue(typeInstance, Convert.ChangeType(value, property.PropertyType));
                         }
                     }
