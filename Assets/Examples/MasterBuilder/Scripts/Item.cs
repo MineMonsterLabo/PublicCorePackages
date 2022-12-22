@@ -12,8 +12,7 @@ namespace MasterBuilder.Examples
         [field: SerializeField] public string Description { get; set; }
 
         [field: SerializeField]
-        [MasterReference(ReferenceType = typeof(ItemType), ReferenceKeyName = nameof(ItemType.Key),
-            DisplayColumnName = nameof(ItemType.Name))]
+        [MasterReference(ReferenceType = typeof(ItemType), ReferenceKeyColumnIndex = 0, DisplayColumnIndex = 1)]
         public int ItemTypeId { get; set; }
 
         [field: SerializeField]
