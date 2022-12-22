@@ -68,7 +68,8 @@ namespace MasterBuilder.Editor
         {
             var isFileExists = File.Exists($"{info.Attribute.AssetPath}.xlsx");
             var workbook = isFileExists
-                ? new XSSFWorkbook(new FileStream($"{info.Attribute.AssetPath}.xlsx", FileMode.Open, FileAccess.Read,
+                ? WorkbookFactory.Create(new FileStream($"{info.Attribute.AssetPath}.xlsx", FileMode.Open,
+                    FileAccess.Read,
                     FileShare.ReadWrite))
                 : new XSSFWorkbook();
             foreach (var pair in info.Types)
@@ -76,14 +77,13 @@ namespace MasterBuilder.Editor
                 GenerateXlsxSheet(workbook, pair.Key, pair.Value);
             }
 
-            if (workbook.Count == 0)
+            if (workbook.NumberOfSheets == 0)
             {
                 Debug.LogWarning("生成が必要なシートはないため、作成をスキップしました。");
                 return;
             }
 
-            using var steam = new FileStream($"{info.Attribute.AssetPath}.xlsx", FileMode.OpenOrCreate,
-                FileAccess.ReadWrite);
+            using var steam = new FileStream($"{info.Attribute.AssetPath}.xlsx", FileMode.Create, FileAccess.ReadWrite);
             workbook.Write(steam, false);
 
             AssetDatabase.Refresh();
