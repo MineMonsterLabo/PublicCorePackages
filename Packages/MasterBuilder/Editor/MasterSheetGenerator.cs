@@ -204,6 +204,16 @@ namespace MasterBuilder.Editor
                     SetCellColor(contextCell, contextNameColor);
 
                     var masterName = MasterRegistry.GetTypeFromMasterName(masterReferenceAttribute?.ReferenceType);
+                    var validationHelper = workSheet.GetDataValidationHelper();
+                    var constraint =
+                        validationHelper.CreateFormulaListConstraint(
+                            $"OFFSET({masterName}!$E$11,0,0,COUNTA({masterName}!E:E))");
+                    var validationData =
+                        validationHelper.CreateValidation(constraint,
+                            new CellRangeAddressList(row, row, col - 1, col - 1));
+                    validationData.ShowErrorBox = true;
+                    workSheet.GetDataValidations().Clear();
+                    workSheet.AddValidationData(validationData);
                     // var listValidation = valueCell.GetDataValidation() ?? valueCell.CreateDataValidation();
                     // listValidation.AllowedValues = XLAllowedValues.List;
                     // listValidation.List($"=OFFSET({masterName}!$D$10, 0, 0, COUNTA(D:D), 0)");
@@ -221,6 +231,15 @@ namespace MasterBuilder.Editor
 
                 contextCell.SetCellValue(isContextSwitch ? context : string.Empty);
                 SetCellColor(contextCell, contextNameColor);
+
+                if (isMultiColumn)
+                {
+                    var masterName = MasterRegistry.GetTypeFromMasterName(masterReferenceAttribute?.ReferenceType);
+                    var colAddress = CellReference.ConvertNumToColString(valueCell.Address.Column + 1);
+                    valueCell.SetCellType(CellType.Formula);
+                    valueCell.SetCellFormula(
+                        $"INDEX(OFFSET({masterName}!$D$11,0,0,COUNTA({masterName}!D:D),2),MATCH(${colAddress}11,OFFSET({masterName}!$E$11,0,0,COUNTA({masterName}!E:E),1),0),1)");
+                }
 
                 /*var validation = valueCell.GetDataValidation() ?? valueCell.CreateDataValidation();
                 validation.AllowedValues = TypeFromAllowedValues(propertyType);
