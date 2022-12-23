@@ -19,6 +19,11 @@
 "com.minemonsterlabo.marine_lang": "https://github.com/MineMonsterLabo/PublicCoreUnityPackages.git?path=Packages/MarineLang"
 ```
 
+#### MasterBuilder
+```
+"com.minemonsterlabo.master_builder": "https://github.com/MineMonsterLabo/PublicCoreUnityPackages.git?path=Packages/MasterBuilder"
+```
+
 #### ParameterSceneManager
 ```
 "com.minemonsterlabo.parameter_senen_manager": "https://github.com/MineMonsterLabo/PublicCoreUnityPackages.git?path=Packages/ParameterSceneManager"
