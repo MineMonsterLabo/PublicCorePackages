@@ -40,9 +40,9 @@
       "optional": true
     },
     {
-      "title": "Localize",
+      "title": "MasterBuilder",
       "description": "",
-      "content": "https://github.com/MineMonsterLabo/PublicCoreUnityPackages.git?path=Packages/Localize",
+      "content": "https://github.com/MineMonsterLabo/PublicCoreUnityPackages.git?path=Packages/MasterBuilder",
       "type": 0,
       "optional": true
     },

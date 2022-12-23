@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using ClosedXML.Excel;
+using MasterBuilder.Editor.Extensions;
+using NPOI.SS.UserModel;
+using NPOI.XSSF.UserModel;
 using UnityEditor.AssetImporters;
 using UnityEngine;
 
@@ -13,13 +15,13 @@ namespace MasterBuilder.Editor
         public override void OnImportAsset(AssetImportContext ctx)
         {
             using var steam = new FileStream(ctx.assetPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-            using var workbook = new XLWorkbook(steam);
+            using var workbook = new XSSFWorkbook(steam);
 
             var masterList = ScriptableObject.CreateInstance<MasterList>();
             ctx.AddObjectToAsset("Masters", masterList);
             ctx.SetMainObject(masterList);
 
-            foreach (var workSheet in workbook.Worksheets)
+            foreach (var workSheet in workbook)
             {
                 var objects = CreateScriptableObject(workSheet);
                 if (objects == null)
@@ -33,16 +35,16 @@ namespace MasterBuilder.Editor
             }
         }
 
-        private ScriptableObject[] CreateScriptableObject(IXLWorksheet workSheet)
+        private ScriptableObject[] CreateScriptableObject(ISheet workSheet)
         {
             var soList = new List<ScriptableObject>();
             var row = 2;
             var col = 2;
-            var sheetName = workSheet.Name;
-            var classNameCell = workSheet.Cell(row, col + 1);
-            var contextsCell = workSheet.Cell(++row, col + 1);
+            var sheetName = workSheet.SheetName;
+            var classNameCell = workSheet.GetCell(row, col + 1);
+            var contextsCell = workSheet.GetCell(++row, col + 1);
 
-            var type = Type.GetType(classNameCell.CachedValue.ToString());
+            var type = Type.GetType(classNameCell.StringCellValue);
             if (type == null)
                 return null;
 
@@ -50,7 +52,7 @@ namespace MasterBuilder.Editor
             if (collectionType == null)
                 return null;
 
-            var contexts = contextsCell.CachedValue.ToString().Split(",");
+            var contexts = contextsCell.StringCellValue.Split(",");
             if (contexts.Length <= 0)
                 return null;
 
@@ -61,19 +63,21 @@ namespace MasterBuilder.Editor
             var columnInfos = new List<ColumnInfo>();
             while (true)
             {
-                var columnNameCell = workSheet.Cell(++row, col);
-                var typeCell = workSheet.Cell(++row, col);
-                var requireCell = workSheet.Cell(++row, col);
-                var contextCell = workSheet.Cell(++row, col);
-                if (classNameCell.IsEmpty() || typeCell.IsEmpty() || requireCell.IsEmpty())
+                var columnNameCell = workSheet.GetCell(++row, col);
+                var typeCell = workSheet.GetCell(++row, col);
+                var requireCell = workSheet.GetCell(++row, col);
+                var contextCell = workSheet.GetCell(++row, col);
+                if (string.IsNullOrWhiteSpace(classNameCell.StringCellValue) ||
+                    string.IsNullOrWhiteSpace(typeCell.StringCellValue) ||
+                    string.IsNullOrWhiteSpace(requireCell.StringCellValue))
                     break;
 
                 columnInfos.Add(new ColumnInfo
                 {
-                    Name = columnNameCell.CachedValue.ToString(),
-                    Type = typeCell.CachedValue.ToString(),
-                    IsRequire = requireCell.CachedValue.ToString() == "yes",
-                    Context = contextCell.CachedValue.ToString()
+                    Name = columnNameCell.StringCellValue,
+                    Type = typeCell.StringCellValue,
+                    IsRequire = requireCell.StringCellValue == "yes",
+                    Context = contextCell.StringCellValue
                 });
 
                 ++col;
@@ -105,10 +109,11 @@ namespace MasterBuilder.Editor
                             continue;
                         }
 
-                        var valueCell = workSheet.Cell(row, ++col);
+                        var valueCell = workSheet.GetCell(row, ++col);
                         if (string.IsNullOrWhiteSpace(columnInfo.Context) || columnInfo.Context == context)
                         {
-                            if (columnInfo.IsRequire && valueCell.IsEmpty())
+                            var stringValue = valueCell.GetStringValue();
+                            if (columnInfo.IsRequire && string.IsNullOrWhiteSpace(stringValue))
                             {
                                 isEnd = true;
                                 break;
@@ -124,8 +129,8 @@ namespace MasterBuilder.Editor
                             if (!property.CanWrite)
                                 property = property.DeclaringType?.GetProperty(columnInfo.Name);
 
-                            var value = valueCell.CachedValue ?? (property?.GetValue(typeInstance) ??
-                                                                  GetDefaultValue(property?.PropertyType));
+                            var value = stringValue ?? (property?.GetValue(typeInstance) ??
+                                                        GetDefaultValue(property?.PropertyType));
                             property?.SetValue(typeInstance, Convert.ChangeType(value, property.PropertyType));
                         }
                     }
