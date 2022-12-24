@@ -1,4 +1,5 @@
-﻿using UnityEditor;
+﻿using MasterBuilder.Editor.Settings;
+using UnityEditor;
 
 namespace MasterBuilder.Editor
 {
@@ -18,10 +19,11 @@ namespace MasterBuilder.Editor
 
         private static void AfterAssemblyReload()
         {
-            if (EditorOptions.IsEnableAutoRegisterType)
+            var setting = MasterBuilderSettings.GetOrCreateSettings();
+            if (setting.isEnableAutoRegisterType)
                 MasterRegistry.RegisterMasterTypeFromAssemblies();
 
-            if (EditorOptions.IsEnableAutoGenerateSheet)
+            if (setting.isEnableAutoGenerateSheet)
                 MasterSheetGenerator.Generate(MasterRegistry.MasterTypes);
         }
     }
