@@ -66,11 +66,10 @@ namespace MasterBuilder.Editor
 
         private static void GenerateXlsxFile(GenerateInfo info)
         {
-            var isFileExists = File.Exists($"{info.Attribute.AssetPath}.xlsx");
+            var filePath = $"{info.Attribute.AssetPath}.xlsx";
+            var isFileExists = File.Exists(filePath);
             var workbook = isFileExists
-                ? WorkbookFactory.Create(new FileStream($"{info.Attribute.AssetPath}.xlsx", FileMode.Open,
-                    FileAccess.Read,
-                    FileShare.ReadWrite))
+                ? WorkbookFactory.Create(new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
                 : new XSSFWorkbook();
             foreach (var pair in info.Types)
             {
@@ -83,7 +82,13 @@ namespace MasterBuilder.Editor
                 return;
             }
 
-            using var steam = new FileStream($"{info.Attribute.AssetPath}.xlsx", FileMode.Create, FileAccess.ReadWrite);
+            var folderPath = Path.GetDirectoryName(filePath);
+            if (folderPath != null)
+            {
+                Directory.CreateDirectory(folderPath);
+            }
+
+            using var steam = new FileStream(filePath, FileMode.Create, FileAccess.ReadWrite);
             workbook.Write(steam, false);
 
             AssetDatabase.Refresh();
