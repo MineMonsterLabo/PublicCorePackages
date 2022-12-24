@@ -9,7 +9,7 @@ namespace MasterBuilder.BuildIn
 
     [Serializable]
     [MasterAsset(AssetPath = "Assets/Resources/MasterBuilder/Localize")]
-    [Master(Contexts = new[] { "en-US", "ja-JP" })]
+    [Master(Contexts = new[] { "en-US", "ja-JP" }, Version = 1)]
     public class InternalLocalizeString : LocalizeString
     {
     }
