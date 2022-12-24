@@ -14,6 +14,7 @@ namespace MasterBuilder.Examples
 
     [Serializable]
     [MasterAsset(AssetPath = "Assets/Examples/MasterBuilder/Resources/Masters/Master2")]
+    [Master(Version = 1)]
     public class ItemType : MasterDefinition<int>
     {
         [field: SerializeField] public string Name { get; set; }
