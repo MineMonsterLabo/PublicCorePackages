@@ -2,7 +2,7 @@
     "name": "MasterBuilder.Examples",
     "rootNamespace": "MasterBuilder",
     "references": [
-        "Localize"
+        "MasterBuilder"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
