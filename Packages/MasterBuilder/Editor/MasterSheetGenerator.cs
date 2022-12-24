@@ -175,10 +175,11 @@ namespace MasterBuilder.Editor
             var enableContexts = isMultiColumn ? new[] { "any-context", "shadow-column" } : new[] { "any-context" };
             if (isContextSwitch)
             {
-                enableContexts = contexts.Except(masterColumnAttribute?.DisableContexts ?? Array.Empty<string>())
+                enableContexts = contexts.Except(masterColumnAttribute.DisableContexts ?? Array.Empty<string>())
                     .ToArray();
             }
 
+            var columnName = masterColumnAttribute?.Name ?? propertyInfo.Name;
             foreach (var context in enableContexts)
             {
                 row = infoStartRow;
@@ -196,7 +197,7 @@ namespace MasterBuilder.Editor
                 ++col;
                 if (context == "shadow-column")
                 {
-                    columnNameCell.SetCellValue($"D__{propertyInfo.Name}");
+                    columnNameCell.SetCellValue($"D__{columnName}");
                     cellNameComment.String =
                         new XSSFRichTextString(masterColumnAttribute?.Description ?? "empty description");
                     columnNameCell.CellComment = cellNameComment;
@@ -229,7 +230,7 @@ namespace MasterBuilder.Editor
                     continue;
                 }
 
-                columnNameCell.SetCellValue(propertyInfo.Name);
+                columnNameCell.SetCellValue(columnName);
                 cellNameComment.String =
                     new XSSFRichTextString(masterColumnAttribute?.Description ?? "empty description");
                 columnNameCell.CellComment = cellNameComment;

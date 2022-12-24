@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Reflection;
+using MasterBuilder.Attributes;
 using MasterBuilder.Editor.Extensions;
 using NPOI.SS.UserModel;
 using NPOI.XSSF.UserModel;
@@ -122,7 +125,16 @@ namespace MasterBuilder.Editor
                             var property = type.GetProperty(columnInfo.Name);
                             if (property == null)
                             {
-                                isEnd = true;
+                                property = type.GetProperties().FirstOrDefault(e =>
+                                {
+                                    var attribute = e.GetCustomAttribute<MasterColumnAttribute>();
+                                    return attribute.Name == columnInfo.Name;
+                                });
+                                if (property == null)
+                                {
+                                    isEnd = true;
+                                }
+
                                 break;
                             }
 
