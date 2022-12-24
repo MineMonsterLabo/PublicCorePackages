@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace MasterBuilder.Examples
 {
-    public class ItemCollection : MasterDefinitionCollectionBase<int, Item>
+    public class ItemCollection : MasterCollectionBase<int, Item>
     {
         [SerializeField] private List<Item> _innerCollection = new List<Item>();
 

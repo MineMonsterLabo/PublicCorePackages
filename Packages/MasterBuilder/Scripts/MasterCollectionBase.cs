@@ -6,9 +6,9 @@ using UnityEngine;
 
 namespace MasterBuilder
 {
-    public abstract class MasterDefinitionCollectionBase<TKey, TMasterDefine> : ScriptableObject,
-        IMasterDefinitionCollection<TKey, TMasterDefine> where TKey : IComparable<TKey>, IEquatable<TKey>
-        where TMasterDefine : MasterDefinition<TKey>
+    public abstract class
+        MasterCollectionBase<TKey, TMasterDefine> : ScriptableObject, IMasterCollection<TKey, TMasterDefine>
+        where TKey : IComparable<TKey>, IEquatable<TKey> where TMasterDefine : MasterDefinition<TKey>
     {
         protected Dictionary<TKey, TMasterDefine> CacheTable { get; set; } = new Dictionary<TKey, TMasterDefine>();
 

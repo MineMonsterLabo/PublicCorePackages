@@ -31,7 +31,7 @@ namespace MasterBuilder.Editor
                 if (type.IsAbstract || type.IsInterface)
                     continue;
 
-                if (!typeof(IMasterDefinitionCollection).IsAssignableFrom(type))
+                if (!typeof(IMasterCollection).IsAssignableFrom(type))
                     continue;
 
                 if (!typeof(ScriptableObject).IsAssignableFrom(type))
