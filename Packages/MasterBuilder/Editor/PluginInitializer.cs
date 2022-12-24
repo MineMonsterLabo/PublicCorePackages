@@ -16,11 +16,6 @@ namespace MasterBuilder.Editor
             MasterSheetGenerator.Generate(MasterRegistry.MasterTypes);
         }
 
-        [MenuItem("Master/Reimport Xlsx Sheet")]
-        private static void ReImportSheet()
-        {
-        }
-
         private static void AfterAssemblyReload()
         {
             if (EditorOptions.IsEnableAutoRegisterType)
