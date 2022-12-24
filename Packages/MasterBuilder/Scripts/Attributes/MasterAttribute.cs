@@ -7,6 +7,8 @@ namespace MasterBuilder.Attributes
     {
         public string Name { get; set; }
 
+        public int Version { get; set; } = -1;
+
         public string[] Contexts { get; set; } = { "default" };
     }
 }

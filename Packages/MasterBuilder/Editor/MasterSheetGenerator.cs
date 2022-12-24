@@ -71,9 +71,10 @@ namespace MasterBuilder.Editor
             var workbook = isFileExists
                 ? WorkbookFactory.Create(new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
                 : new XSSFWorkbook();
+            var changed = false;
             foreach (var pair in info.Types)
             {
-                GenerateXlsxSheet(workbook, pair.Key, pair.Value);
+                changed |= GenerateXlsxSheet(workbook, pair.Key, pair.Value);
             }
 
             if (workbook.NumberOfSheets == 0)
@@ -88,32 +89,49 @@ namespace MasterBuilder.Editor
                 Directory.CreateDirectory(folderPath);
             }
 
+            if (!changed)
+            {
+                Debug.LogWarning("シートに変更がないため、作成をスキップしました。");
+                return;
+            }
+
             using var steam = new FileStream(filePath, FileMode.Create, FileAccess.ReadWrite);
             workbook.Write(steam, false);
 
             AssetDatabase.Refresh();
         }
 
-        private static void GenerateXlsxSheet(IWorkbook workbook, string name, Type type)
+        private static bool GenerateXlsxSheet(IWorkbook workbook, string name, Type type)
         {
             var workSheet = workbook.GetSheet(name) ?? workbook.CreateSheet(name);
             var patriarch = workSheet.DrawingPatriarch ?? workSheet.CreateDrawingPatriarch();
             var masterAttribute = type.GetCustomAttribute<MasterAttribute>() ?? new MasterAttribute
             {
-                Name = name,
-                Contexts = new[] { "default" }
+                Name = name
             };
             var properties =
                 type.GetProperties(BindingFlags.FlattenHierarchy | BindingFlags.Instance | BindingFlags.Public |
                                    BindingFlags.NonPublic)
                     .OrderBy(e => e.GetCustomAttribute<MasterColumnAttribute>()?.Order ?? -1);
 
-            var row = 2;
+            var row = 1;
             var col = 2;
-            var classNameLabelCell = workSheet.GetCell(row, col);
+            var versionLabelCell = workSheet.GetCell(row, col);
+            var versionCell = workSheet.GetCell(row, col + 1);
+            var classNameLabelCell = workSheet.GetCell(++row, col);
             var classNameCell = workSheet.GetCell(row, col + 1);
             var contextsLabelCell = workSheet.GetCell(++row, col);
             var contextsCell = workSheet.GetCell(row, col + 1);
+            versionLabelCell.SetCellValue("Version:");
+
+            var versionString = versionCell.StringCellValue;
+            if (!string.IsNullOrWhiteSpace(versionString) && int.TryParse(versionString, out var version))
+            {
+                if (version != -1 && version >= masterAttribute.Version)
+                    return false;
+            }
+
+            versionCell.SetCellValue(masterAttribute.Version);
             classNameLabelCell.SetCellValue("ClassName:");
             classNameCell.SetCellValue(type.AssemblyQualifiedName);
             contextsLabelCell.SetCellValue("Contexts:");
@@ -157,6 +175,8 @@ namespace MasterBuilder.Editor
             }
 
             workSheet.CreateFreezePane(4, 10);
+
+            return true;
         }
 
         private static void GenerateXlsxSheetColumn(IWorkbook workbook, ISheet workSheet, string[] contexts,
