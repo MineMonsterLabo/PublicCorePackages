@@ -124,13 +124,14 @@ namespace MasterBuilder.Editor
             var contextsCell = workSheet.GetCell(row, col + 1);
             versionLabelCell.SetCellValue("Version:");
 
-            var versionString = versionCell.StringCellValue;
+            var versionString = versionCell.GetStringValue();
             if (!string.IsNullOrWhiteSpace(versionString) && int.TryParse(versionString, out var version))
             {
                 if (version != -1 && version >= masterAttribute.Version)
                     return false;
             }
 
+            versionCell.SetCellType(CellType.String);
             versionCell.SetCellValue(masterAttribute.Version);
             classNameLabelCell.SetCellValue("ClassName:");
             classNameCell.SetCellValue(type.AssemblyQualifiedName);
