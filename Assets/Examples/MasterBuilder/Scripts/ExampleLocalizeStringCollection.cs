@@ -10,7 +10,7 @@ namespace MasterBuilder.Examples
 
     [Serializable]
     [MasterAsset(AssetPath = "Assets/Examples/MasterBuilder/Resources/Masters/Master")]
-    [Master(Contexts = new[] { "default", "en-US" }, Version = 1)]
+    [Master(Contexts = new[] { "ja-JP", "en-US" }, Version = 1)]
     public class ExampleLocalizeString : LocalizeString
     {
     }
