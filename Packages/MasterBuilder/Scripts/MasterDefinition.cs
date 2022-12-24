@@ -5,7 +5,7 @@ using UnityEngine;
 namespace MasterBuilder
 {
     [Serializable]
-    public class MasterDefinition<TKey>
+    public class MasterDefinition<TKey> where TKey : IComparable<TKey>, IEquatable<TKey>
     {
         [field: SerializeField]
         [MasterColumn(Order = int.MinValue)]
