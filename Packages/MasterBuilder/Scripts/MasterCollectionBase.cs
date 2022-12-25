@@ -22,6 +22,11 @@ namespace MasterBuilder
             CacheTable = InnerCollection.ToDictionary(e => e.Key, e => e);
         }
 
+        public void ClearCache()
+        {
+            CacheTable.Clear();
+        }
+
         public TMasterDefine Get(TKey key)
         {
             if (CacheTable.TryGetValue(key, out var cacheValue))
