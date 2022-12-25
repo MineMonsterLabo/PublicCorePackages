@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using UnityEngine;
 
 namespace InterfaceHost
 {
@@ -10,9 +11,11 @@ namespace InterfaceHost
 
         public void Push<T>(UserInterfacePageBase<T> page)
         {
+            Debug.Log($"{page.GetType().FullName}.OnBeginPushStack");
             page.OnBeginPushStack();
             page.gameObject.SetActive(true);
             _stack.Push(page);
+            Debug.Log($"{page.GetType().FullName}.OnEndPushStack");
             page.OnEndPushStack();
         }
 
@@ -21,9 +24,11 @@ namespace InterfaceHost
             if (_stack.Count == 0)
                 return null;
 
+            Debug.Log($"{_stack.Peek().GetType().FullName}.OnBeginPopStack");
             _stack.Peek().OnBeginPopStack();
             var page = _stack.Pop();
             page.gameObject.SetActive(false);
+            Debug.Log($"{_stack.Peek().GetType().FullName}.OnEndPopStack");
             page.OnEndPopStack();
 
             return page;
@@ -39,6 +44,7 @@ namespace InterfaceHost
 
         public void Clear()
         {
+            Debug.Log("Clear UI Stack.");
             while (_stack.Count > 0)
             {
                 _stack.Peek().OnBeginPopStack();
