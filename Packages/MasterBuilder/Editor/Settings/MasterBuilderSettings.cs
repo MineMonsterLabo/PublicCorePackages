@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using MasterBuilder.BuildIn;
 using UnityEditor;
 using UnityEngine;
 
@@ -37,13 +38,15 @@ namespace MasterBuilder.Editor.Settings
             var settings = new SerializedObject(MasterBuilderSettings.GetOrCreateSettings());
             var provider = new SettingsProvider("Project/MasterBuilder/Settings", SettingsScope.Project)
             {
-                label = "Settings",
+                label = "settings".InternalLocalizeString(),
                 guiHandler = searchContext =>
                 {
                     EditorGUILayout.PropertyField(
-                        settings.FindProperty(nameof(MasterBuilderSettings.isEnableAutoRegisterType)));
+                        settings.FindProperty(nameof(MasterBuilderSettings.isEnableAutoRegisterType)),
+                        new GUIContent("enable_automatic_generation_of_master_definition".InternalLocalizeString()));
                     EditorGUILayout.PropertyField(
-                        settings.FindProperty(nameof(MasterBuilderSettings.isEnableAutoGenerateSheet)));
+                        settings.FindProperty(nameof(MasterBuilderSettings.isEnableAutoGenerateSheet)),
+                        new GUIContent("enable_automatic_generation_of_master_sheets".InternalLocalizeString()));
 
                     settings.ApplyModifiedPropertiesWithoutUndo();
 

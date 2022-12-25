@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using MasterBuilder.Attributes;
+using MasterBuilder.BuildIn;
 using UnityEngine;
 
 namespace MasterBuilder.Editor
@@ -45,14 +46,15 @@ namespace MasterBuilder.Editor
         {
             if (!typeof(ScriptableObject).IsAssignableFrom(type))
                 throw new ArgumentException(
-                    $"The type `{type.FullName}` could not be assigned to a `ScriptableObject`.");
+                    "could_not_assign_type_`x`_to_`scriptableobject`".InternalLocalizeString(type.FullName));
 
             if (type.IsAbstract || type.IsInterface)
-                throw new ArgumentException("The type `{type.FullName}` could not be instantiated.");
+                throw new ArgumentException("could_not_instantiate_type_`x`".InternalLocalizeString(type.FullName));
 
             var innerType = type.GetMethod("GetEnumerator")?.ReturnType.GetGenericArguments()[0];
             if (innerType == null)
-                throw new ArgumentException("`GetEnumerator` not found.");
+                throw new ArgumentException("the_function_`getenumerator`_was_not_implemented"
+                    .InternalLocalizeString());
 
             var masterAttribute = innerType.GetCustomAttribute<MasterAttribute>();
             var masterName = innerType.Name[..(innerType.Name.Length <= 15 ? innerType.Name.Length : 15)];

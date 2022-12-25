@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using MasterBuilder.Attributes;
+using MasterBuilder.BuildIn;
 using MasterBuilder.Editor.Extensions;
 using NPOI.SS.UserModel;
 using NPOI.SS.Util;
@@ -79,7 +80,7 @@ namespace MasterBuilder.Editor
 
             if (workbook.NumberOfSheets == 0)
             {
-                Debug.LogWarning("生成が必要なシートはないため、作成をスキップしました。");
+                Debug.LogWarning("skipped_creation_as_there_are_no_sheets_generated".InternalLocalizeString());
                 return;
             }
 
@@ -91,7 +92,7 @@ namespace MasterBuilder.Editor
 
             if (!changed)
             {
-                Debug.LogWarning("シートに変更がないため、作成をスキップしました。");
+                Debug.LogWarning("skipped_creation_as_there_are_no_changes_in_the_sheet".InternalLocalizeString());
                 return;
             }
 
@@ -122,7 +123,7 @@ namespace MasterBuilder.Editor
             var classNameCell = workSheet.GetCell(row, col + 1);
             var contextsLabelCell = workSheet.GetCell(++row, col);
             var contextsCell = workSheet.GetCell(row, col + 1);
-            versionLabelCell.SetCellValue("Version:");
+            versionLabelCell.SetCellValue("version:".InternalLocalizeString());
 
             var versionString = versionCell.GetStringValue();
             if (!string.IsNullOrWhiteSpace(versionString) && int.TryParse(versionString, out var version))
@@ -133,9 +134,9 @@ namespace MasterBuilder.Editor
 
             versionCell.SetCellType(CellType.String);
             versionCell.SetCellValue(masterAttribute.Version);
-            classNameLabelCell.SetCellValue("ClassName:");
+            classNameLabelCell.SetCellValue("name_of_the_class:".InternalLocalizeString());
             classNameCell.SetCellValue(type.AssemblyQualifiedName);
-            contextsLabelCell.SetCellValue("Contexts:");
+            contextsLabelCell.SetCellValue("context_list:".InternalLocalizeString());
             contextsCell.SetCellValue(string.Join(",", masterAttribute.Contexts));
 
             workSheet.SetColumnWidth(col, 4000);
@@ -150,13 +151,13 @@ namespace MasterBuilder.Editor
             var requireLabelCell = workSheet.GetCell(++row, col);
             var contextLabelCell = workSheet.GetCell(++row, col);
 
-            columnNameLabelCell.SetCellValue("ColumnName:");
+            columnNameLabelCell.SetCellValue("column_name:".InternalLocalizeString());
             SetCellColor(columnNameLabelCell, columnNameColor);
 
-            typeLabelCell.SetCellValue("Type:");
-            requireLabelCell.SetCellValue("Require:");
+            typeLabelCell.SetCellValue("type:".InternalLocalizeString());
+            requireLabelCell.SetCellValue("required:".InternalLocalizeString());
 
-            contextLabelCell.SetCellValue("Context:");
+            contextLabelCell.SetCellValue("context:".InternalLocalizeString());
             SetCellColor(contextLabelCell, contextNameColor);
 
             ++col;
@@ -219,8 +220,8 @@ namespace MasterBuilder.Editor
                 if (context == "shadow-column")
                 {
                     columnNameCell.SetCellValue($"D__{columnName}");
-                    cellNameComment.String =
-                        new XSSFRichTextString(masterColumnAttribute?.Description ?? "empty description");
+                    cellNameComment.String = new XSSFRichTextString(masterColumnAttribute?.Description ??
+                                                                    "no_description".InternalLocalizeString());
                     columnNameCell.CellComment = cellNameComment;
                     SetCellColor(columnNameCell, columnNameColor);
 
@@ -253,7 +254,8 @@ namespace MasterBuilder.Editor
 
                 columnNameCell.SetCellValue(columnName);
                 cellNameComment.String =
-                    new XSSFRichTextString(masterColumnAttribute?.Description ?? "empty description");
+                    new XSSFRichTextString(masterColumnAttribute?.Description ??
+                                           "no_description".InternalLocalizeString());
                 columnNameCell.CellComment = cellNameComment;
                 SetCellColor(columnNameCell, columnNameColor);
 
