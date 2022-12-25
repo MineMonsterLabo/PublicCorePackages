@@ -28,7 +28,7 @@ namespace InterfaceHost
             _stack.Peek().OnBeginPopStack();
             var page = _stack.Pop();
             page.gameObject.SetActive(false);
-            Debug.Log($"{_stack.Peek().GetType().FullName}.OnEndPopStack");
+            Debug.Log($"{page.GetType().FullName}.OnEndPopStack");
             page.OnEndPopStack();
 
             return page;
