@@ -19,7 +19,7 @@ namespace MasterBuilder.Editor.Settings
 
         public static MasterBuilderSettings GetOrCreateSettings()
         {
-            var settings = AssetDatabase.LoadAssetAtPath<MasterBuilderSettings>(SettingsFolder);
+            var settings = AssetDatabase.LoadAssetAtPath<MasterBuilderSettings>(SettingsPath);
             if (settings == null)
             {
                 settings = CreateInstance<MasterBuilderSettings>();
