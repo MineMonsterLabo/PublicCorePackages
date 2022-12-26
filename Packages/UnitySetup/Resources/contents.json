@@ -62,9 +62,9 @@
     {
       "title": "TextMeshPro Japanese",
       "description": "",
-      "content": "",
+      "content": "https://github.com/MineMonsterLabo/PublicCoreUnityPackages/raw/master/Assets/Plugins/TMP_Japanese/TMP_Japanese.unitypackage",
       "type": 2,
-      "ignore": true
+      "optional": true
     }
   ]
 }
