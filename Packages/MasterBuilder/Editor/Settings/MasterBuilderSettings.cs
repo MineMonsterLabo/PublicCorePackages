@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
 using MasterBuilder.BuildIn;
 using UnityEditor;
 using UnityEngine;
@@ -13,6 +14,9 @@ namespace MasterBuilder.Editor.Settings
         public bool isEnableAutoRegisterType = true;
         public bool isEnableAutoGenerateSheet = false;
 
+        public List<string> generateIgnoreMasters = new List<string>
+            { "Packages/MasterBuilder/Resources/MasterBuilder/Localize" };
+
         public static MasterBuilderSettings GetOrCreateSettings()
         {
             var settings = AssetDatabase.LoadAssetAtPath<MasterBuilderSettings>(SettingsFolder);
@@ -21,6 +25,8 @@ namespace MasterBuilder.Editor.Settings
                 settings = CreateInstance<MasterBuilderSettings>();
                 settings.isEnableAutoRegisterType = true;
                 settings.isEnableAutoGenerateSheet = false;
+                settings.generateIgnoreMasters = new List<string>
+                    { "Packages/MasterBuilder/Resources/MasterBuilder/Localize" };
                 Directory.CreateDirectory(SettingsFolder);
                 AssetDatabase.CreateAsset(settings, SettingsPath);
                 AssetDatabase.SaveAssetIfDirty(settings);
@@ -47,6 +53,9 @@ namespace MasterBuilder.Editor.Settings
                     EditorGUILayout.PropertyField(
                         settings.FindProperty(nameof(MasterBuilderSettings.isEnableAutoGenerateSheet)),
                         new GUIContent("enable_automatic_generation_of_master_sheets".InternalLocalizeString()));
+
+                    EditorGUILayout.PropertyField(
+                        settings.FindProperty(nameof(MasterBuilderSettings.generateIgnoreMasters)));
 
                     settings.ApplyModifiedPropertiesWithoutUndo();
 

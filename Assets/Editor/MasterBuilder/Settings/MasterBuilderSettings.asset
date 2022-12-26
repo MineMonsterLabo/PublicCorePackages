@@ -14,3 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isEnableAutoRegisterType: 1
   isEnableAutoGenerateSheet: 0
+  generateIgnoreMasters:
+  - Packages/MasterBuilder/Resources/MasterBuilder/Localize

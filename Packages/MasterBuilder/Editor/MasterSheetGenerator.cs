@@ -6,6 +6,7 @@ using System.Reflection;
 using MasterBuilder.Attributes;
 using MasterBuilder.BuildIn;
 using MasterBuilder.Editor.Extensions;
+using MasterBuilder.Editor.Settings;
 using NPOI.SS.UserModel;
 using NPOI.SS.Util;
 using NPOI.XSSF.UserModel;
@@ -67,6 +68,13 @@ namespace MasterBuilder.Editor
 
         private static void GenerateXlsxFile(GenerateInfo info)
         {
+            var setting = MasterBuilderSettings.GetOrCreateSettings();
+            if (setting.generateIgnoreMasters.Contains(info.Attribute.AssetPath))
+            {
+                Debug.LogWarning("skipped_creation_as_there_are_no_sheets_generated");
+                return;
+            }
+
             var filePath = $"{info.Attribute.AssetPath}.xlsx";
             var isFileExists = File.Exists(filePath);
             var workbook = isFileExists
