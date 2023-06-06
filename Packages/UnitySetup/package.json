@@ -4,5 +4,8 @@
   "version": "1.0.0",
   "displayName": "UnitySetup",
   "type": "library",
-  "unity": "2021.1"
+  "unity": "2021.1",
+  "dependencies": {
+    "com.unity.nuget.newtonsoft-json": "3.0.2"
+  }
 }
