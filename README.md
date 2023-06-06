@@ -1,6 +1,7 @@
 # PublicCoreUnityPackages
 
 ## パッケージの追加方法
+※各種ライセンスはフォルダ内のLICENSEまたは、LICENSE_THIRDPARTYをご確認ください。
 
 ### BinaryTag
 Jsonのような階層構造を持ったデータ構造をバイナリとして保存が行えるライブラリ
@@ -15,13 +16,13 @@ UnityEditorのインスペクターのフィールドをグループ化出来る
 ```
 
 #### MarineLang
-Luaからインスピレーションを受けて作成されたスクリプト言語を導入するエディタ拡張とスクリプトランタイム
+Luaからインスピレーションを受けて作成されたスクリプト言語をUnityへ導入するエディタ拡張とスクリプトランタイム
 ```
 "com.minemonsterlabo.marine_lang": "https://github.com/MineMonsterLabo/PublicCoreUnityPackages.git?path=Packages/MarineLang"
 ```
 
 #### MasterBuilder
-Excelを使用したマスタデータを自動生成、管理出来るエディタ拡張
+Unity上でExcelを使用したマスタファイルを管理出来るエディタ拡張
 ```
 "com.minemonsterlabo.master_builder": "https://github.com/MineMonsterLabo/PublicCoreUnityPackages.git?path=Packages/MasterBuilder"
 ```
@@ -32,7 +33,17 @@ Excelを使用したマスタデータを自動生成、管理出来るエディ
 "com.minemonsterlabo.parameter_senen_manager": "https://github.com/MineMonsterLabo/PublicCoreUnityPackages.git?path=Packages/ParameterSceneManager"
 ```
 
-### 
+#### InterfaceHost
+Unity上で、簡単にUIの遷移システムを実装出来るライブラリ
+```
+UnitySetupより導入してください。
+```
+
+#### TMP_Japanese
+Unity上で、簡単に日本語フォントを利用出来るテンプレートパッケージ
+```
+UnitySetupより導入してください。
+```
 
 #### UnitySetup
 上記のライブラリを簡単に導入するためのエディタ拡張
