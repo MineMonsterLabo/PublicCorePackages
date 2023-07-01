@@ -1,3 +1,7 @@
 {
-	"name": "UnitySetup.Editor"
+	"name": "UnitySetup.Editor",
+	"rootNamespace": "MasterBuilder",
+	"includePlatforms": [
+		"Editor"
+	]
 }
