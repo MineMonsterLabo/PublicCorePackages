@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+#if UNITY_EDITOR
+using System.Collections.Generic;
 using System.IO;
 using MasterBuilder.BuildIn;
 using UnityEditor;
@@ -68,3 +69,4 @@ namespace MasterBuilder.Editor.Settings
         }
     }
 }
+#endif
