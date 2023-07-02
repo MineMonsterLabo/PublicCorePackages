@@ -1,7 +1,7 @@
 {
   "name": "com.minemonsterlabo.master_builder",
   "author": "hiroki",
-  "version": "1.3.1",
+  "version": "1.3.2",
   "displayName": "MasterBuilder",
   "type": "library",
   "unity": "2021.1",
