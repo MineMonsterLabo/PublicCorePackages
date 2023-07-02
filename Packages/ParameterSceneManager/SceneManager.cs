@@ -28,15 +28,17 @@ namespace ParameterSceneManager
             }
         }
 
-        public static async UniTask LoadScene<TScene>() where TScene : SceneBase<Unit>
+        public static async UniTask LoadSceneCustom<TScene>(Func<string, UniTask> loadFunc)
+            where TScene : SceneBase<Unit>
         {
-            await LoadScene<TScene, Unit>(Unit.Default);
+            await LoadSceneCustom<TScene, Unit>(Unit.Default, loadFunc);
         }
 
-        public static async UniTask LoadScene<TScene, TArgument>(TArgument argument) where TScene : SceneBase<TArgument>
+        public static async UniTask LoadSceneCustom<TScene, TArgument>(TArgument argument,
+            Func<string, UniTask> loadFunc) where TScene : SceneBase<TArgument>
         {
             var sceneName = typeof(TScene).Name;
-            await UnitySceneManager.LoadSceneAsync(sceneName).ToUniTask();
+            await loadFunc.Invoke(sceneName);
 
             var rootGameObjects = UnitySceneManager.GetActiveScene().GetRootGameObjects();
 
@@ -59,6 +61,17 @@ namespace ParameterSceneManager
                     break;
                 }
             }
+        }
+
+        public static async UniTask LoadScene<TScene>() where TScene : SceneBase<Unit>
+        {
+            await LoadScene<TScene, Unit>(Unit.Default);
+        }
+
+        public static async UniTask LoadScene<TScene, TArgument>(TArgument argument) where TScene : SceneBase<TArgument>
+        {
+            await LoadSceneCustom<TScene, TArgument>(argument,
+                sceneName => UnitySceneManager.LoadSceneAsync(sceneName).ToUniTask());
         }
     }
 }
