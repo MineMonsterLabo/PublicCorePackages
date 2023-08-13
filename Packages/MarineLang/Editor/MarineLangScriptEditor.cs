@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
 using MarineLang.LexicalAnalysis;
 using MarineLang.MacroPlugins;
 using MarineLang.PresetMacroPlugins;
@@ -212,8 +213,8 @@ namespace MarineLang.Unity.Editor
             }
             EditorGUILayout.EndScrollView();
 
-            var count = _parseResult.parseErrorInfos?.Count() ?? 0;
-            var isFolding = EditorGUILayout.Foldout(_parseResult.IsError, $"エラー一覧({count})");
+            var count = _parseResult?.parseErrorInfos?.Count() ?? 0;
+            var isFolding = EditorGUILayout.Foldout(_parseResult?.IsError ?? false, $"エラー一覧({count})");
             _errorScrollBar = EditorGUILayout.BeginScrollView(_errorScrollBar,
                 GUILayout.Height(200 - EditorGUIUtility.singleLineHeight));
             {
@@ -264,7 +265,18 @@ namespace MarineLang.Unity.Editor
                             File.WriteAllText(filePath, code);
                         }
 
-                        var process = Process.Start(vsCodePath, $"-r \"{directory.FullName}\"");
+                        var vsCodeCliPath = $"{Path.GetDirectoryName(vsCodePath)}/bin/code";
+                        var extensionFilePath = Path.GetFullPath("Packages/com.minemonsterlabo.marine_lang/Editor/marinevscext.vsix");
+                        var process = Process.Start(new ProcessStartInfo
+                        {
+                            FileName = vsCodeCliPath, 
+                            Arguments = $"--install-extension \"{extensionFilePath}\"",
+                            UseShellExecute = true,
+                            WindowStyle = ProcessWindowStyle.Hidden
+                        });
+                        process?.WaitForExit();
+                        
+                        process = Process.Start(vsCodePath, $"-r \"{directory.FullName}\"");
                         // while ((process?.MainWindowHandle ?? IntPtr.Zero) != IntPtr.Zero)
                         // {
                         // }
