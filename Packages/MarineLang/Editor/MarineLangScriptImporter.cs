@@ -27,6 +27,52 @@ namespace MarineLang.Unity.Editor
         }
     }
 
+    [CustomEditor(typeof(MarineLangScriptImporter))]
+    public class MarineLangScriptImporterEditor : ScriptedImporterEditor
+    {
+        public override void OnInspectorGUI()
+        {
+            EditorGUILayout.Space();
+            
+            if (target is MarineLangScriptImporter importer)
+            {
+                if (GUILayout.Button("Open Editor"))
+                {
+                    var filePath = importer.assetPath;
+                    var text = File.ReadAllText(filePath);
+                    var scriptEditor = EditorWindow.CreateWindow<MarineLangScriptEditor>();
+                    scriptEditor.onSave += () =>
+                    {
+                        File.WriteAllText(filePath, scriptEditor.editingText);
+                        AssetDatabase.Refresh();
+                    };
+                    scriptEditor.SetText(text, filePath);
+                    
+                    var rect = scriptEditor.position;
+                    rect.size = new Vector2(800, 600);
+                    scriptEditor.position = rect;
+                    CenterWindow(scriptEditor);
+                    scriptEditor.Show();
+                }
+                
+                EditorGUILayout.Space();
+            }
+            
+            base.OnInspectorGUI();
+        }
+
+        private static void CenterWindow(EditorWindow window)
+        {
+            Rect main = EditorGUIUtility.GetMainWindowPosition();
+            Rect pos = window.position;
+            float centerWidth = (main.width - pos.width) * 0.5f;
+            float centerHeight = (main.height - pos.height) * 0.5f;
+            pos.x = main.x + centerWidth;
+            pos.y = main.y + centerHeight;
+            window.position = pos;
+        }
+    }
+
     [CustomEditor(typeof(MarineLangScriptAsset))]
     public class MarineLangScriptAssetEditor : UnityEditor.Editor
     {
