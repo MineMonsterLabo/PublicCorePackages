@@ -78,6 +78,8 @@ namespace MarineLang.Unity.Editor
             }
         }
 
+        private static Func<SyntaxAnalyzer> _syntaxAnalyzerFactory;
+
         private Vector2 _scrollBar;
         private Vector2 _errorScrollBar;
 
@@ -112,6 +114,11 @@ namespace MarineLang.Unity.Editor
             return newPopup;
         }
 
+        public static void SetCustomSyntaxAnalyzer(Func<SyntaxAnalyzer> syntaxAnalyzerFactory)
+        {
+            _syntaxAnalyzerFactory = syntaxAnalyzerFactory;
+        }
+
         public void SetText(string text, string path)
         {
             text ??= string.Empty;
@@ -122,11 +129,19 @@ namespace MarineLang.Unity.Editor
 
         private void OnEnable()
         {
-            var pluginContainer = new PluginContainer();
-            pluginContainer.AddExprPlugin("constEval", new ConstExprPlugin());
+            if (_syntaxAnalyzerFactory == null)
+            {
+                var pluginContainer = new PluginContainer();
+                pluginContainer.AddExprPlugin("constEval", new ConstExprPlugin());
 
-            _lexicalAnalyzer = new LexicalAnalyzer();
-            _syntaxAnalyzer = new SyntaxAnalyzer(pluginContainer);
+                _lexicalAnalyzer = new LexicalAnalyzer();
+                _syntaxAnalyzer = new SyntaxAnalyzer(pluginContainer);
+            }
+            else
+            {
+                _lexicalAnalyzer = new LexicalAnalyzer();
+                _syntaxAnalyzer = _syntaxAnalyzerFactory?.Invoke();
+            }
         }
 
         private void OnGUI()
