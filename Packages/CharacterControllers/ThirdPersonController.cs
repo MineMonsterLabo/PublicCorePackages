@@ -1,3 +1,8 @@
+using System;
+using Cinemachine;
+using UnityEngine;
+using UnityEngine.Serialization;
+
 namespace CharacterControllers
 {
     public class ThirdPersonController : MonoBehaviour
